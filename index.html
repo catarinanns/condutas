@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condutas · Plantão</title>
+<link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Condutas%22,%22short_name%22:%22Condutas%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23F7F6F3%22,%22theme_color%22:%22%232A6B5A%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232A6B5A'/%3E%3Cpath d='M50 20v60M20 50h60' stroke='white' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E%22,%22sizes%22:%22any%22,%22type%22:%22image/svg+xml%22}]}">
+<meta name="theme-color" content="#2A6B5A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Condutas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F6F3;
+    --surface: #FFFFFF;
+    --border: #E2DFD8;
+    --border-light: #EDEBE6;
+    --text-primary: #1A1916;
+    --text-secondary: #6B6860;
+    --text-muted: #A8A59E;
+    --accent: #2A6B5A;
+    --accent-light: #EAF2EF;
+    --accent-hover: #235848;
+    --danger: #C0392B;
+    --danger-light: #FDF0EE;
+    --purple: #6C5CE7;
+    --purple-light: #F0EEFF;
+    --orange: #E67E22;
+    --orange-light: #FEF5EC;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.04);
+    --sidebar-w: 300px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans); background: var(--bg); color: var(--text-primary);
+    height: 100vh; overflow: hidden; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; display: flex; flex-direction: column;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 20px; height: 52px; display: flex; align-items: center;
+    justify-content: space-between; flex-shrink: 0; z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .logo-mark {
+    width: 26px; height: 26px; background: var(--accent); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .logo-mark svg { width: 13px; height: 13px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; }
+  .site-title { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; }
+  .site-subtitle { font-size: 10px; color: var(--text-muted); font-family: var(--mono); letter-spacing: 0.04em; }
+  .header-right { display: flex; align-items: center; gap: 6px; }
+  .btn-ghost {
+    display: flex; align-items: center; gap: 5px; background: none;
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 10px;
+    font-size: 12px; font-weight: 500; font-family: var(--sans); color: var(--text-secondary);
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .btn-ghost:hover { background: var(--bg); border-color: #CCC9C0; color: var(--text-primary); }
+  .btn-ghost svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+  .btn-add {
+    display: flex; align-items: center; gap: 6px; background: var(--accent); color: white;
+    border: none; border-radius: var(--radius); padding: 6px 13px; font-size: 13px;
+    font-weight: 500; font-family: var(--sans); cursor: pointer; transition: background 0.15s; white-space: nowrap;
+  }
+  .btn-add:hover { background: var(--accent-hover); }
+  .btn-add svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+  /* ─── LAYOUT ─── */
+  .app-body { display: flex; flex: 1; overflow: hidden; }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0; background: var(--surface);
+    border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  /* Tabs */
+  .sidebar-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .sidebar-tab {
+    flex: 1; padding: 11px 8px; font-size: 12px; font-weight: 500; font-family: var(--sans);
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s; letter-spacing: 0.02em;
+  }
+  .sidebar-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .sidebar-tab:hover:not(.active) { color: var(--text-secondary); }
+
+  /* Condutas tab content */
+  .tab-content { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+  .tab-content.active { display: flex; }
+
+  .sidebar-top { padding: 12px 12px 8px; flex-shrink: 0; }
+
+  .search-wrap { position: relative; margin-bottom: 10px; }
+  .search-icon {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    width: 13px; height: 13px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; pointer-events: none;
+  }
+  #search {
+    width: 100%; height: 34px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 0 28px 0 30px;
+    font-family: var(--sans); font-size: 13px; color: var(--text-primary);
+    outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  #search::placeholder { color: var(--text-muted); }
+  #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(42,107,90,0.1); background: var(--surface); }
+  .search-clear {
+    position: absolute; right: 7px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; padding: 3px;
+    color: var(--text-muted); display: none; border-radius: 3px; line-height: 0;
+  }
+  .search-clear:hover { color: var(--text-primary); }
+  .search-clear svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+  .az-bar { display: flex; flex-wrap: wrap; gap: 1px; margin-bottom: 8px; }
+  .az-bar.hidden { display: none; }
+  .az-btn {
+    width: 21px; height: 21px; display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 9px; font-weight: 600; border: none; border-radius: 4px;
+    background: none; color: var(--border); cursor: default; transition: background 0.12s, color 0.12s;
+  }
+  .az-btn.active { color: var(--text-muted); cursor: pointer; }
+  .az-btn.active:hover { background: var(--accent-light); color: var(--accent); }
+  .az-btn.current { background: var(--accent); color: white; }
+
+  .stats-count {
+    font-size: 10px; color: var(--text-muted); font-family: var(--mono);
+    padding-bottom: 8px; border-bottom: 1px solid var(--border-light); letter-spacing: 0.04em;
+  }
+  .stats-count span { color: var(--accent); font-weight: 500; }
+
+  .sidebar-list { flex: 1; overflow-y: auto; padding: 4px 6px 20px; }
+  .sidebar-list::-webkit-scrollbar { width: 3px; }
+  .sidebar-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .letter-divider {
+    font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--text-muted);
+    letter-spacing: 0.12em; padding: 10px 6px 4px;
+  }
+  .list-item {
+    display: flex; align-items: flex-start; gap: 7px; padding: 7px 7px;
+    border-radius: 6px; cursor: pointer; transition: background 0.12s; user-select: none;
+  }
+  .list-item:hover { background: var(--bg); }
+  .list-item.active { background: var(--accent-light); }
+  .list-item.active .item-name { color: var(--accent); }
+  .list-item.active .item-idx { color: var(--accent); opacity: 0.5; }
+  .item-idx { font-family: var(--mono); font-size: 9px; color: var(--text-muted); min-width: 14px; flex-shrink: 0; padding-top: 2px; }
+  .item-name { font-size: 11.5px; font-weight: 500; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.01em; line-height: 1.35; flex: 1; min-width: 0; }
+  .item-dots { display: flex; gap: 3px; flex-shrink: 0; padding-top: 5px; }
+  .item-dot { width: 5px; height: 5px; border-radius: 50%; opacity: 0.5; }
+  .item-dot.purple { background: var(--purple); }
+  .item-dot.green { background: var(--accent); }
+  .item-dot.orange { background: var(--orange); }
+  .item-dot.red { background: var(--danger); }
+
+  mark { background: #FEF4A0; border-radius: 2px; padding: 0 1px; }
+
+  /* Escores tab content */
+  .score-list { flex: 1; overflow-y: auto; padding: 8px 8px 20px; }
+  .score-list::-webkit-scrollbar { width: 3px; }
+  .score-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .score-list-item {
+    padding: 10px 10px; border-radius: 7px; cursor: pointer;
+    transition: background 0.12s; user-select: none; margin-bottom: 2px;
+  }
+  .score-list-item:hover { background: var(--bg); }
+  .score-list-item.active { background: var(--accent-light); }
+  .score-list-item.active .score-list-name { color: var(--accent); }
+  .score-list-name { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+  .score-list-sub { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
+  .score-list-item.active .score-list-sub { color: var(--accent); opacity: 0.7; }
+
+  /* ─── DETAIL ─── */
+  .detail { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; }
+  .detail::-webkit-scrollbar { width: 5px; }
+  .detail::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .detail-view { display: none; flex-direction: column; flex: 1; }
+  .detail-view.visible { display: flex; }
+
+  /* Empty */
+  #view-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 10px; padding: 40px; color: var(--text-muted);
+  }
+  #view-empty svg { width: 34px; height: 34px; stroke: var(--border); fill: none; stroke-width: 1.5; }
+  #view-empty p { font-size: 13px; }
+
+  /* Conduta header */
+  .detail-header {
+    padding: 20px 28px 16px; border-bottom: 1px solid var(--border);
+    background: var(--surface); display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 16px; flex-shrink: 0;
+  }
+  .detail-title { font-size: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.3; flex: 1; }
+  .detail-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .btn-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 6px;
+    background: transparent; cursor: pointer; color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .btn-icon svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+  .btn-icon.edit:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+  .btn-icon.delete:hover { background: var(--danger-light); color: var(--danger); border-color: var(--danger); }
+
+  .detail-sections { flex: 1; padding: 20px 28px 48px; display: flex; flex-direction: column; gap: 14px; }
+
+  .section-block {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+  }
+  .section-label {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 14px; border-bottom: 1px solid var(--border-light); background: var(--bg);
+  }
+  .section-label-text {
+    font-size: 10px; font-weight: 700; font-family: var(--mono);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .section-label-text.purple { color: var(--purple); }
+  .section-label-text.green { color: var(--accent); }
+  .section-label-text.orange { color: var(--orange); }
+  .section-label-text.red { color: var(--danger); }
+
+  .btn-copy {
+    display: flex; align-items: center; gap: 4px; background: none;
+    border: 1px solid var(--border); border-radius: 5px; padding: 3px 9px;
+    font-size: 11px; font-weight: 500; font-family: var(--sans);
+    color: var(--text-secondary); cursor: pointer; transition: all 0.15s;
+  }
+  .btn-copy:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+  .btn-copy.copied { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+  .btn-copy svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+
+  .section-body { padding: 14px 16px; }
+  .prescription-text {
+    font-family: var(--mono); font-size: 12px; line-height: 1.95;
+    color: var(--text-primary); white-space: pre-wrap; word-break: break-word;
+  }
+
+  /* ─── SCORE CALCULATOR ─── */
+  .score-calc-header {
+    padding: 20px 28px 16px; background: var(--surface);
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
+  }
+  .score-calc-name { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+  .score-calc-subtitle { font-size: 12px; color: var(--text-muted); }
+
+  .score-calc-body { flex: 1; padding: 20px 28px 48px; display: flex; flex-direction: column; gap: 14px; }
+
+  .score-fields-block {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+  }
+  .score-section-title {
+    padding: 8px 14px; background: var(--bg); border-bottom: 1px solid var(--border-light);
+    font-size: 10px; font-weight: 700; font-family: var(--mono);
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary);
+  }
+  .score-fields { padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; }
+
+  .score-field {
+    display: flex; align-items: flex-start; gap: 10px; padding: 7px 8px;
+    border-radius: 6px; cursor: pointer; transition: background 0.1s;
+  }
+  .score-field:hover { background: var(--bg); }
+  .score-field input[type="checkbox"],
+  .score-field input[type="radio"] { margin-top: 3px; flex-shrink: 0; accent-color: var(--accent); width: 14px; height: 14px; cursor: pointer; }
+  .score-field label { font-size: 12.5px; color: var(--text-primary); cursor: pointer; line-height: 1.4; flex: 1; }
+  .score-field .pts {
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    flex-shrink: 0; padding-top: 3px; min-width: 24px; text-align: right;
+    color: var(--text-muted);
+  }
+  .score-field .pts.pos { color: var(--accent); }
+  .score-field .pts.neg { color: var(--danger); }
+
+  .score-select-field { padding: 10px 14px 12px; }
+  .score-select-field label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--mono); font-size: 10px; }
+  .score-select-field select {
+    width: 100%; height: 36px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0 10px; font-family: var(--sans); font-size: 13px;
+    color: var(--text-primary); outline: none; cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .score-select-field select:focus { border-color: var(--accent); }
+
+  /* Result box */
+  .score-result {
+    border-radius: var(--radius); padding: 16px 18px;
+    border: 1.5px solid var(--border); background: var(--surface);
+    transition: all 0.2s;
+  }
+  .score-result.green { border-color: var(--accent); background: var(--accent-light); }
+  .score-result.yellow { border-color: #D4A017; background: #FFFBF0; }
+  .score-result.red { border-color: var(--danger); background: var(--danger-light); }
+
+  .score-result-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .score-number {
+    font-family: var(--mono); font-size: 28px; font-weight: 600; color: var(--accent);
+    min-width: 48px; line-height: 1;
+  }
+  .score-result.yellow .score-number { color: #B7860B; }
+  .score-result.red .score-number { color: var(--danger); }
+  .score-result.green .score-number { color: var(--accent); }
+
+  .score-result-label {
+    font-size: 13px; font-weight: 600; color: var(--text-primary); line-height: 1.3;
+  }
+  .score-result-rec { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+  .score-result-pending { font-size: 12px; color: var(--text-muted); font-style: italic; text-align: center; padding: 8px 0; }
+
+  .btn-reset {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 12px; font-size: 12px; font-weight: 500; font-family: var(--sans);
+    color: var(--text-muted); cursor: pointer; transition: all 0.15s; align-self: flex-start;
+  }
+  .btn-reset:hover { border-color: var(--text-muted); color: var(--text-primary); }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(15,14,12,0.5);
+    z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--surface); border-radius: 12px; width: 100%; max-width: 640px;
+    max-height: 92vh; box-shadow: var(--shadow-md); animation: modal-in 0.18s ease-out;
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  @keyframes modal-in {
+    from { opacity: 0; transform: scale(0.97) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .modal-header {
+    padding: 18px 20px 0; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  .modal-title { font-size: 15px; font-weight: 600; }
+  .modal-close {
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    padding: 4px; border-radius: 4px; line-height: 0;
+  }
+  .modal-close:hover { color: var(--text-primary); background: var(--border-light); }
+  .modal-close svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+  .modal-body { padding: 14px 20px 4px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1; }
+  .modal-body::-webkit-scrollbar { width: 4px; }
+  .modal-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .field label {
+    display: block; font-size: 10px; font-weight: 700; color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; font-family: var(--mono);
+  }
+  .field label .opt { font-weight: 400; color: var(--text-muted); text-transform: none; font-size: 9px; }
+  .field input, .field textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 9px 12px; font-family: var(--sans); font-size: 13px; color: var(--text-primary);
+    outline: none; transition: border-color 0.15s, box-shadow 0.15s; resize: vertical;
+  }
+  .field textarea { font-family: var(--mono); font-size: 12px; line-height: 1.8; min-height: 130px; }
+  .field input:focus, .field textarea:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(42,107,90,0.1); background: var(--surface);
+  }
+  .modal-footer {
+    padding: 11px 20px 15px; display: flex; justify-content: flex-end; gap: 8px;
+    flex-shrink: 0; border-top: 1px solid var(--border-light);
+  }
+  .btn-cancel {
+    background: none; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 7px 15px; font-size: 13px; font-weight: 500; font-family: var(--sans);
+    color: var(--text-secondary); cursor: pointer; transition: background 0.15s;
+  }
+  .btn-cancel:hover { background: var(--bg); }
+  .btn-save {
+    background: var(--accent); border: none; border-radius: var(--radius);
+    padding: 7px 17px; font-size: 13px; font-weight: 500; font-family: var(--sans);
+    color: white; cursor: pointer; transition: background 0.15s;
+  }
+  .btn-save:hover { background: var(--accent-hover); }
+
+  /* ─── CONFIRM ─── */
+  .confirm-overlay {
+    position: fixed; inset: 0; background: rgba(15,14,12,0.5);
+    z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .confirm-overlay.active { display: flex; }
+  .confirm-box {
+    background: var(--surface); border-radius: 10px; width: 100%; max-width: 360px;
+    padding: 22px; box-shadow: var(--shadow-md); animation: modal-in 0.15s ease-out;
+  }
+  .confirm-box h3 { font-size: 14px; font-weight: 600; margin-bottom: 7px; }
+  .confirm-box p { font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.5; }
+  .confirm-actions { display: flex; justify-content: flex-end; gap: 8px; }
+  .btn-confirm-delete {
+    background: var(--danger); border: none; border-radius: var(--radius);
+    padding: 7px 15px; font-size: 13px; font-weight: 500; font-family: var(--sans);
+    color: white; cursor: pointer; transition: opacity 0.15s;
+  }
+  .btn-confirm-delete:hover { opacity: 0.85; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #1A1916; color: white; padding: 8px 15px; border-radius: var(--radius);
+    font-size: 13px; font-weight: 500; z-index: 400; opacity: 0;
+    transition: transform 0.25s, opacity 0.25s; white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  .btn-template-pick {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--accent-light); border: 1px dashed var(--accent);
+    border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 500;
+    font-family: var(--sans); color: var(--accent); cursor: pointer;
+    transition: background 0.15s; margin-bottom: 6px; width: 100%;
+  }
+  .btn-template-pick:hover { background: #d6ece6; }
+  .btn-template-pick svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+
+  .template-item {
+    padding: 10px 12px; border-radius: 6px; cursor: pointer;
+    font-size: 13px; color: var(--text-primary); font-weight: 500;
+    transition: background 0.1s; border: 1px solid transparent;
+  }
+  .template-item:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+
+
+  /* ─── TAGS ─── */
+  .tag-filter-bar {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    padding: 8px 12px; border-bottom: 1px solid var(--border-light);
+    flex-shrink: 0;
+  }
+  .tag-filter-btn {
+    padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 600;
+    font-family: var(--mono); letter-spacing: 0.04em; cursor: pointer;
+    border: 1px solid var(--border); background: none; color: var(--text-muted);
+    transition: all 0.12s; white-space: nowrap;
+  }
+  .tag-filter-btn:hover { border-color: var(--text-muted); color: var(--text-secondary); }
+  .tag-filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .tag-filter-btn.all.active { background: var(--text-primary); border-color: var(--text-primary); }
+
+  .tag-badge {
+    display: inline-block; padding: 1px 7px; border-radius: 20px;
+    font-size: 9px; font-weight: 700; font-family: var(--mono);
+    letter-spacing: 0.04em; white-space: nowrap; flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .tag-select {
+    width: 100%; height: 36px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 0 10px; font-family: var(--sans);
+    font-size: 13px; color: var(--text-primary); outline: none; cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .tag-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(42,107,90,0.1); }
+
+  /* ─── NOTES PANEL ─── */
+  .notes-overlay {
+    position: fixed; inset: 0; background: rgba(15,14,12,0.4);
+    z-index: 200; display: none; align-items: flex-end; justify-content: flex-end;
+    padding: 20px;
+  }
+  .notes-overlay.active { display: flex; }
+  .notes-panel {
+    background: var(--surface); border-radius: 12px; width: 360px;
+    max-height: 480px; box-shadow: var(--shadow-md);
+    animation: modal-in 0.18s ease-out; display: flex; flex-direction: column;
+  }
+  .notes-header {
+    padding: 14px 16px 0; display: flex; align-items: center;
+    justify-content: space-between; flex-shrink: 0;
+  }
+  .notes-title { font-size: 13px; font-weight: 600; }
+  .notes-date { font-size: 10px; color: var(--text-muted); font-family: var(--mono); }
+  .notes-close {
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    padding: 4px; border-radius: 4px; line-height: 0;
+  }
+  .notes-close:hover { color: var(--text-primary); background: var(--border-light); }
+  .notes-close svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+  #notes-textarea {
+    flex: 1; background: none; border: none; outline: none; padding: 12px 16px;
+    font-family: var(--mono); font-size: 12px; line-height: 1.8; color: var(--text-primary);
+    resize: none; min-height: 200px;
+  }
+  #notes-textarea::placeholder { color: var(--text-muted); }
+  .notes-footer {
+    padding: 8px 16px 14px; display: flex; align-items: center;
+    justify-content: space-between; border-top: 1px solid var(--border-light);
+  }
+  .notes-hint { font-size: 10px; color: var(--text-muted); font-family: var(--mono); }
+  .btn-notes-clear {
+    background: none; border: 1px solid var(--border); border-radius: 5px;
+    padding: 3px 10px; font-size: 11px; color: var(--text-muted);
+    cursor: pointer; font-family: var(--sans); transition: all 0.15s;
+  }
+  .btn-notes-clear:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* ─── EXPORT ─── */
+  .export-dropdown { position: relative; }
+  .export-menu {
+    position: absolute; top: calc(100% + 6px); right: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; box-shadow: var(--shadow-md); min-width: 180px;
+    z-index: 150; display: none; overflow: hidden;
+    animation: modal-in 0.12s ease-out;
+  }
+  .export-menu.open { display: block; }
+  .export-menu-item {
+    display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+    font-size: 13px; color: var(--text-primary); cursor: pointer;
+    transition: background 0.1s; border: none; background: none;
+    width: 100%; text-align: left; font-family: var(--sans);
+  }
+  .export-menu-item:hover { background: var(--bg); }
+  .export-menu-item svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; color: var(--text-muted); }
+
+  /* ─── PRINT ─── */
+  @media print {
+    header, .sidebar, .detail-empty, #view-score, .detail-actions,
+    .section-label .btn-copy, .toast, .modal-overlay, .confirm-overlay,
+    .notes-overlay, .export-menu { display: none !important; }
+    body { overflow: visible !important; height: auto !important; }
+    .app-body { display: block !important; }
+    .detail { overflow: visible !important; background: white; }
+    #view-conduta { display: flex !important; }
+    .detail-header { border-bottom: 2px solid #000; padding: 0 0 12px; background: white; }
+    .detail-title { font-size: 18px; }
+    .detail-sections { padding: 16px 0; gap: 20px; }
+    .section-block { box-shadow: none; border: 1px solid #ccc; }
+    .prescription-text { font-size: 11px; line-height: 1.8; }
+    .section-label { background: #f5f5f5; }
+  }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)}
+    40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)}
+  }
+
+  @media (max-width: 640px) {
+    :root { --sidebar-w: 100vw; }
+    .app-body { flex-direction: column; }
+    .sidebar { width: 100%; height: 42vh; border-right: none; border-bottom: 1px solid var(--border); }
+    .detail { height: 58vh; }
+    .btn-ghost span, .btn-add span { display: none; }
+    .btn-ghost, .btn-add { padding: 6px 8px; }
+    .detail-sections, .score-calc-body { padding: 14px 16px 32px; }
+    .detail-header, .score-calc-header { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo-mark">
+      <svg viewBox="0 0 14 14"><path d="M7 2v10M2 7h10" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="site-title">Condutas</div>
+      <div class="site-subtitle">Catarina Nunes Sampaio</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="btn-ghost" onclick="toggleNotes()" title="Notas do plantão" id="btn-notes">
+      <svg viewBox="0 0 14 14"><path d="M2 3h10M2 6h10M2 9h6"/></svg>
+      <span>Notas</span>
+    </button>
+    <button class="btn-ghost" onclick="importData()" title="Importar JSON">
+      <svg viewBox="0 0 14 14"><path d="M7 2v7M4 6l3 3 3-3M2 11h10"/></svg>
+      <span>Importar</span>
+    </button>
+    <button class="btn-ghost" onclick="exportData()" title="Exportar JSON">
+      <svg viewBox="0 0 14 14"><path d="M7 9V2M4 5l3-3 3 3M2 11h10"/></svg>
+      <span>Exportar</span>
+    </button>
+    <button class="btn-add" id="btn-new" onclick="openModal()">
+      <svg viewBox="0 0 14 14"><path d="M7 2v10M2 7h10"/></svg>
+      <span>Nova conduta</span>
+    </button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+    <div class="sidebar-tabs">
+      <button class="sidebar-tab active" data-tab="condutas" onclick="switchTab('condutas')">Condutas</button>
+      <button class="sidebar-tab" data-tab="escores" onclick="switchTab('escores')">Escores</button>
+    </div>
+
+    <!-- Tab: Condutas -->
+    <div class="tab-content active" id="tab-condutas">
+      <div class="sidebar-top">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10.5 10.5L14 14" stroke-linecap="round"/></svg>
+          <input type="text" id="search" placeholder="Buscar..." oninput="handleSearch(this.value)" autocomplete="off" spellcheck="false">
+          <button class="search-clear" id="search-clear" onclick="clearSearch()">
+            <svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg>
+          </button>
+        </div>
+        <div id="az-bar" class="az-bar"></div>
+        <div class="stats-count" id="count-label">— condutas</div>
+        <div class="tag-filter-bar" id="tag-filter-bar"></div>
+      </div>
+      <div class="sidebar-list" id="list"></div>
+    </div>
+
+    <!-- Tab: Escores -->
+    <div class="tab-content" id="tab-escores">
+      <div class="score-list" id="score-list"></div>
+    </div>
+  </div>
+
+  <!-- ── DETAIL ── -->
+  <div class="detail">
+
+    <!-- Empty -->
+    <div class="detail-view visible" id="view-empty">
+      <svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M9 8h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
+      <p>Selecione uma conduta ou escore</p>
+    </div>
+
+    <!-- Conduta detail -->
+    <div class="detail-view" id="view-conduta">
+      <div class="detail-header">
+        <div class="detail-title" id="detail-title"></div>
+        <div class="detail-actions">
+          <div class="export-dropdown" id="export-dropdown">
+            <button class="btn-icon" title="Exportar" onclick="toggleExportMenu(event)">
+              <svg viewBox="0 0 14 14"><path d="M7 9V2M4 5l3-3 3 3M2 11h10"/></svg>
+            </button>
+            <div class="export-menu" id="export-menu">
+              <button class="export-menu-item" onclick="exportTxt()">
+                <svg viewBox="0 0 14 14"><path d="M2 4h10M2 7h7M2 10h5"/></svg>
+                Baixar como .txt
+              </button>
+              <button class="export-menu-item" onclick="exportPrint()">
+                <svg viewBox="0 0 14 14"><rect x="2" y="5" width="10" height="7" rx="1"/><path d="M4 5V3h6v2M4 9h6"/></svg>
+                Imprimir / PDF
+              </button>
+            </div>
+          </div>
+          <button class="btn-icon edit" title="Editar" onclick="openEditSelected()">
+            <svg viewBox="0 0 14 14"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z"/><path d="M8 4l2 2"/></svg>
+          </button>
+          <button class="btn-icon delete" title="Excluir" onclick="askDeleteSelected()">
+            <svg viewBox="0 0 14 14"><path d="M2 4h10M5 4V2.5h4V4M5.5 7v3.5M8.5 7v3.5M3.5 4l.5 8h6l.5-8"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="detail-sections">
+        <div class="section-block" id="sec-anamnese">
+          <div class="section-label">
+            <span class="section-label-text purple">Anamnese</span>
+            <button class="btn-copy" id="copy-anamnese" onclick="copySection('anamnese')">
+              <svg viewBox="0 0 14 14"><rect x="4" y="4" width="8" height="9" rx="1"/><path d="M10 4V3a1 1 0 00-1-1H3a1 1 0 00-1 1v8a1 1 0 001 1h1"/></svg>Copiar
+            </button>
+          </div>
+          <div class="section-body"><pre class="prescription-text" id="detail-anamnese"></pre></div>
+        </div>
+        <div class="section-block" id="sec-exames">
+          <div class="section-label">
+            <span class="section-label-text orange">Exames Sugeridos</span>
+            <button class="btn-copy" id="copy-exames" onclick="copySection('exames')">
+              <svg viewBox="0 0 14 14"><rect x="4" y="4" width="8" height="9" rx="1"/><path d="M10 4V3a1 1 0 00-1-1H3a1 1 0 00-1 1v8a1 1 0 001 1h1"/></svg>Copiar
+            </button>
+          </div>
+          <div class="section-body"><pre class="prescription-text" id="detail-exames"></pre></div>
+        </div>
+        <div class="section-block">
+          <div class="section-label">
+            <span class="section-label-text green">Prescrição</span>
+            <button class="btn-copy" id="copy-prescricao" onclick="copySection('prescricao')">
+              <svg viewBox="0 0 14 14"><rect x="4" y="4" width="8" height="9" rx="1"/><path d="M10 4V3a1 1 0 00-1-1H3a1 1 0 00-1 1v8a1 1 0 001 1h1"/></svg>Copiar
+            </button>
+          </div>
+          <div class="section-body"><pre class="prescription-text" id="detail-body"></pre></div>
+        </div>
+        <div class="section-block" id="sec-alergia">
+          <div class="section-label">
+            <span class="section-label-text red">Alternativa por Alergia</span>
+            <button class="btn-copy" id="copy-alergia" onclick="copySection('alergia')">
+              <svg viewBox="0 0 14 14"><rect x="4" y="4" width="8" height="9" rx="1"/><path d="M10 4V3a1 1 0 00-1-1H3a1 1 0 00-1 1v8a1 1 0 001 1h1"/></svg>Copiar
+            </button>
+          </div>
+          <div class="section-body"><pre class="prescription-text" id="detail-alergia"></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score detail -->
+    <div class="detail-view" id="view-score">
+      <div class="score-calc-header">
+        <div class="score-calc-name" id="score-calc-name"></div>
+        <div class="score-calc-subtitle" id="score-calc-subtitle"></div>
+      </div>
+      <div class="score-calc-body">
+        <div id="score-fields-container"></div>
+        <div class="score-result" id="score-result">
+          <div class="score-result-pending">Preencha os campos acima para calcular.</div>
+        </div>
+        <button class="btn-reset" onclick="resetScore()">Limpar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal: Nova / Editar conduta -->
+<div class="modal-overlay" id="modal-overlay" onclick="overlayClose(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Nova conduta</div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 18 18"><path d="M2 2l14 14M16 2L2 16"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Sistema / Especialidade</label>
+        <select id="field-tag" class="tag-select">
+          <option value="">— sem tag —</option>
+          <option value="RESPIRATÓRIO">RESPIRATÓRIO</option>
+          <option value="CARDIOVASCULAR">CARDIOVASCULAR</option>
+          <option value="DIGESTIVO">DIGESTIVO</option>
+          <option value="URINÁRIO">URINÁRIO</option>
+          <option value="NEUROLÓGICO">NEUROLÓGICO</option>
+          <option value="MUSCULOESQUELÉTICO">MUSCULOESQUELÉTICO</option>
+          <option value="PELE">PELE</option>
+          <option value="INFECTOLOGIA">INFECTOLOGIA</option>
+          <option value="OTORRINO">OTORRINO</option>
+          <option value="GERAL">GERAL</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" id="field-name" placeholder="Ex: AMIGDALITE AGUDA BACTERIANA" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Anamnese — modelo <span class="opt">(opcional)</span></label>
+        <button type="button" class="btn-template-pick" onclick="openTemplatePicker()">
+          <svg viewBox="0 0 14 14"><path d="M2 4h10M2 7h7M2 10h5"/></svg>
+          Usar modelo pronto
+        </button>
+        <textarea id="field-anamnese" style="min-height:160px" placeholder="QP: 
+
+HDA: 
+
+HPP: 
+
+ALERGIAS MEDICAMENTOSAS: 
+
+EXAME FÍSICO:
+  - Geral: 
+  - AC: 
+  - AR: 
+  - Abdome: 
+  - Outros: "></textarea>
+      </div>
+      <div class="field">
+        <label>Exames sugeridos <span class="opt">(opcional)</span></label>
+        <textarea id="field-exames" style="min-height:80px" placeholder="Hemograma completo&#10;PCR&#10;Rx de tórax PA e perfil"></textarea>
+      </div>
+      <div class="field">
+        <label>Prescrição</label>
+        <textarea id="field-body" style="min-height:160px" placeholder="VIA ORAL&#10;&#10;1) AMOXICILINA 500MG ------------- 30 CPS&#10;   TOMAR 01 CÁPSULA DE 8/8H POR 10 DIAS"></textarea>
+      </div>
+      <div class="field">
+        <label>Alternativa por alergia <span class="opt">(opcional)</span></label>
+        <textarea id="field-alergia" style="min-height:100px" placeholder="Se alérgico à penicilina:&#10;&#10;VIA ORAL&#10;&#10;1) AZITROMICINA 500MG ------------ 05 CPS&#10;   TOMAR 01 CÁPSULA AO DIA POR 5 DIAS"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" onclick="save()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notes Panel -->
+<div class="notes-overlay" id="notes-overlay" onclick="notesOverlayClose(event)">
+  <div class="notes-panel">
+    <div class="notes-header">
+      <div>
+        <div class="notes-title">Notas do plantão</div>
+        <div class="notes-date" id="notes-date"></div>
+      </div>
+      <button class="notes-close" onclick="toggleNotes()">
+        <svg viewBox="0 0 18 18"><path d="M2 2l14 14M16 2L2 16"/></svg>
+      </button>
+    </div>
+    <textarea id="notes-textarea" placeholder="ANOTAÇÕES RÁPIDAS DO PLANTÃO...&#10;&#10;— LEITO 3: REAVALIAÇÃO EM 2H&#10;— PEDIR AMOX NA FARMÁCIA&#10;— RESULTADO DO HC PENDENTE" oninput="saveNotes()"></textarea>
+    <div class="notes-footer">
+      <span class="notes-hint">AUTOSSALVO</span>
+      <button class="btn-notes-clear" onclick="clearNotes()">LIMPAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- Template Picker -->
+<div class="modal-overlay" id="template-overlay" onclick="templateOverlayClose(event)">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <div class="modal-title">Modelos de anamnese</div>
+      <button class="modal-close" onclick="closeTemplatePicker()">
+        <svg viewBox="0 0 18 18"><path d="M2 2l14 14M16 2L2 16"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" style="padding-top:12px;gap:4px">
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:4px">Selecione uma queixa para preencher o campo de anamnese automaticamente.</p>
+      <div id="template-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm -->
+<div class="confirm-overlay" id="confirm-overlay" onclick="confirmOverlayClose(event)">
+  <div class="confirm-box">
+    <h3>Excluir conduta?</h3>
+    <p id="confirm-msg">Esta ação não pode ser desfeita.</p>
+    <div class="confirm-actions">
+      <button class="btn-cancel" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn-confirm-delete" onclick="confirmDelete()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── SCORES DEFINITIONS ──────────────────────────────────────
+const SCORES = [
+  {
+    id: 'centor',
+    name: 'Centor / McIsaac',
+    subtitle: 'Faringoamigdalite bacteriana — indicação de antibiótico',
+    sections: [
+      {
+        fields: [
+          { id: 'exsudato', label: 'Exsudato ou hipertrofia tonsilar', type: 'check', pts: '+1' },
+          { id: 'linfonodos', label: 'Linfonodos cervicais anteriores aumentados e dolorosos', type: 'check', pts: '+1' },
+          { id: 'febre', label: 'Febre > 38°C (história ou temperatura)', type: 'check', pts: '+1' },
+          { id: 'semtosse', label: 'Ausência de tosse', type: 'check', pts: '+1' },
+        ]
+      },
+      {
+        title: 'Faixa etária',
+        fields: [
+          { id: 'idade', type: 'radio', options: [
+            { value: '1', label: '3 – 14 anos', pts: '+1' },
+            { value: '0', label: '15 – 44 anos', pts: '0' },
+            { value: '-1', label: '≥ 45 anos', pts: '−1' },
+          ]}
+        ]
+      }
+    ],
+    calc: (v) => {
+      let s = 0;
+      if (v.exsudato) s++;
+      if (v.linfonodos) s++;
+      if (v.febre) s++;
+      if (v.semtosse) s++;
+      if (v.idade) s += parseInt(v.idade);
+      return s;
+    },
+    interpret: (s) => {
+      if (s <= 0) return { label: `${s} — Improvável bacteriana`, color: 'green', rec: 'Não tratar com antibiótico. Tratamento sintomático.' };
+      if (s === 1) return { label: `${s} — Baixa probabilidade`, color: 'green', rec: 'Não tratar com antibiótico. Tratamento sintomático.' };
+      if (s === 2) return { label: `${s} — Probabilidade moderada`, color: 'yellow', rec: 'Realizar TASO se disponível. Tratar se positivo.' };
+      if (s === 3) return { label: `${s} — Probabilidade moderada-alta`, color: 'yellow', rec: 'Tratar empiricamente ou realizar TASO.' };
+      return { label: `${s} — Alta probabilidade bacteriana`, color: 'red', rec: 'Tratar com antibiótico.' };
+    }
+  },
+  {
+    id: 'curb65',
+    name: 'CURB-65',
+    subtitle: 'Pneumonia adquirida na comunidade — internação vs alta',
+    sections: [{
+      fields: [
+        { id: 'confusao', label: 'Confusão mental (desorientação em tempo, espaço ou pessoa)', type: 'check', pts: '+1' },
+        { id: 'ureia', label: 'Ureia > 50 mg/dL', type: 'check', pts: '+1' },
+        { id: 'fr', label: 'Frequência respiratória ≥ 30 irpm', type: 'check', pts: '+1' },
+        { id: 'pa', label: 'PA sistólica < 90 mmHg ou diastólica ≤ 60 mmHg', type: 'check', pts: '+1' },
+        { id: 'idade65', label: 'Idade ≥ 65 anos', type: 'check', pts: '+1' },
+      ]
+    }],
+    calc: (v) => ['confusao','ureia','fr','pa','idade65'].filter(k => v[k]).length,
+    interpret: (s) => {
+      if (s <= 1) return { label: `${s} — Baixa gravidade`, color: 'green', rec: 'Alta com antibiótico oral. Retornar se piora.' };
+      if (s === 2) return { label: `${s} — Gravidade moderada`, color: 'yellow', rec: 'Avaliar internação, especialmente se sem suporte social adequado.' };
+      return { label: `${s} — Alta gravidade`, color: 'red', rec: `Internar.${s >= 4 ? ' Avaliar UTI.' : ''}` };
+    }
+  },
+  {
+    id: 'ottawa_ankle',
+    name: 'Ottawa — Tornozelo e Pé',
+    subtitle: 'Indicação de radiografia em trauma de tornozelo/pé',
+    sections: [
+      {
+        title: 'Zona maléolar (Rx tornozelo)',
+        fields: [
+          { id: 'mm_lat', label: 'Dor ou sensibilidade nos 6 cm posteriores/ponta do maléolo lateral', type: 'check', pts: '' },
+          { id: 'mm_med', label: 'Dor ou sensibilidade nos 6 cm posteriores/ponta do maléolo medial', type: 'check', pts: '' },
+          { id: 'peso_ankle', label: 'Incapaz de suportar peso imediatamente após o trauma e na avaliação (4 passos)', type: 'check', pts: '' },
+        ]
+      },
+      {
+        title: 'Zona do médio-pé (Rx pé)',
+        fields: [
+          { id: 'meta5', label: 'Dor ou sensibilidade na base do 5º metatarso', type: 'check', pts: '' },
+          { id: 'navicular', label: 'Dor ou sensibilidade sobre o navicular', type: 'check', pts: '' },
+          { id: 'peso_foot', label: 'Incapaz de suportar peso (médio-pé)', type: 'check', pts: '' },
+        ]
+      }
+    ],
+    calc: (v) => 0,
+    interpret: (s, v) => {
+      const ankle = v.mm_lat || v.mm_med || v.peso_ankle;
+      const foot = v.meta5 || v.navicular || v.peso_foot;
+      if (!ankle && !foot) return { label: 'Sem indicação de Rx', color: 'green', rec: 'Nenhum critério de Ottawa presente. Tratamento conservador.' };
+      const parts = [];
+      if (ankle) parts.push('tornozelo');
+      if (foot) parts.push('pé');
+      return { label: `Rx de ${parts.join(' + ')} indicado`, color: 'red', rec: `Solicitar radiografia de ${parts.join(' e ')}.` };
+    },
+    noNumber: true
+  },
+  {
+    id: 'ottawa_knee',
+    name: 'Ottawa — Joelho',
+    subtitle: 'Indicação de radiografia em trauma de joelho',
+    sections: [{
+      fields: [
+        { id: 'idade55', label: 'Idade ≥ 55 anos', type: 'check', pts: '' },
+        { id: 'patela', label: 'Sensibilidade isolada na patela (sem outra área óssea)', type: 'check', pts: '' },
+        { id: 'fibula', label: 'Sensibilidade na cabeça da fíbula', type: 'check', pts: '' },
+        { id: 'flexao', label: 'Incapacidade de fletir o joelho a 90°', type: 'check', pts: '' },
+        { id: 'peso_knee', label: 'Incapacidade de suportar peso e caminhar 4 passos', type: 'check', pts: '' },
+      ]
+    }],
+    calc: (v) => ['idade55','patela','fibula','flexao','peso_knee'].filter(k => v[k]).length,
+    interpret: (s) => {
+      if (s === 0) return { label: 'Sem indicação de Rx', color: 'green', rec: 'Nenhum critério presente. Tratamento conservador.' };
+      return { label: 'Rx de joelho indicado', color: 'red', rec: `${s} critério${s > 1 ? 's' : ''} presente${s > 1 ? 's' : ''}. Solicitar radiografia.` };
+    },
+    noNumber: true
+  },
+  {
+    id: 'glasgow',
+    name: 'Escala de Glasgow',
+    subtitle: 'Nível de consciência — trauma e outras causas',
+    sections: [
+      {
+        title: 'Abertura ocular',
+        fields: [{ id: 'ocular', type: 'radio', options: [
+          { value: '4', label: 'Espontânea', pts: '4' },
+          { value: '3', label: 'Ao estímulo verbal', pts: '3' },
+          { value: '2', label: 'À dor', pts: '2' },
+          { value: '1', label: 'Ausente', pts: '1' },
+        ]}]
+      },
+      {
+        title: 'Resposta verbal',
+        fields: [{ id: 'verbal', type: 'radio', options: [
+          { value: '5', label: 'Orientado', pts: '5' },
+          { value: '4', label: 'Confuso', pts: '4' },
+          { value: '3', label: 'Palavras inapropriadas', pts: '3' },
+          { value: '2', label: 'Sons incompreensíveis', pts: '2' },
+          { value: '1', label: 'Ausente', pts: '1' },
+        ]}]
+      },
+      {
+        title: 'Resposta motora',
+        fields: [{ id: 'motor', type: 'radio', options: [
+          { value: '6', label: 'Obedece comandos', pts: '6' },
+          { value: '5', label: 'Localiza dor', pts: '5' },
+          { value: '4', label: 'Retirada à dor', pts: '4' },
+          { value: '3', label: 'Flexão anormal (decorticação)', pts: '3' },
+          { value: '2', label: 'Extensão anormal (decerebração)', pts: '2' },
+          { value: '1', label: 'Ausente', pts: '1' },
+        ]}]
+      }
+    ],
+    calc: (v) => (parseInt(v.ocular)||0) + (parseInt(v.verbal)||0) + (parseInt(v.motor)||0),
+    interpret: (s) => {
+      if (!s || s < 3) return null;
+      if (s >= 14) return { label: `${s} — TCE Leve`, color: 'green', rec: 'Observar. Avaliar critérios de TC conforme Canadian Head CT Rule.' };
+      if (s >= 9)  return { label: `${s} — TCE Moderado`, color: 'yellow', rec: 'TC de crânio indicada. Avaliar internação para observação.' };
+      return { label: `${s} — TCE Grave`, color: 'red', rec: 'Estabilizar via aérea. TC urgente. Acionar neurocirurgia.' };
+    }
+  },
+  {
+    id: 'wells_tvp',
+    name: 'Wells — TVP',
+    subtitle: 'Probabilidade pré-teste de trombose venosa profunda',
+    sections: [{
+      fields: [
+        { id: 'cancer', label: 'Câncer ativo (tratamento atual ou nos últimos 6 meses)', type: 'check', pts: '+1' },
+        { id: 'paralisia', label: 'Paralisia, paresia ou imobilização recente de MMII', type: 'check', pts: '+1' },
+        { id: 'acamado', label: 'Acamado > 3 dias ou cirurgia grande < 12 semanas', type: 'check', pts: '+1' },
+        { id: 'trajeto', label: 'Dor localizada no trajeto do sistema venoso profundo', type: 'check', pts: '+1' },
+        { id: 'edema_total', label: 'Edema de toda a perna', type: 'check', pts: '+1' },
+        { id: 'panturrilha', label: 'Edema de panturrilha > 3 cm vs lado contralateral', type: 'check', pts: '+1' },
+        { id: 'cacifo', label: 'Edema com cacifo (limitado ao lado sintomático)', type: 'check', pts: '+1' },
+        { id: 'colateral', label: 'Circulação colateral superficial não varicosa', type: 'check', pts: '+1' },
+        { id: 'alternativo', label: 'Diagnóstico alternativo tão ou mais provável que TVP', type: 'check', pts: '−2' },
+      ]
+    }],
+    calc: (v) => {
+      let s = ['cancer','paralisia','acamado','trajeto','edema_total','panturrilha','cacifo','colateral'].filter(k => v[k]).length;
+      if (v.alternativo) s -= 2;
+      return s;
+    },
+    interpret: (s) => {
+      if (s <= 0) return { label: `${s} — Baixa probabilidade`, color: 'green', rec: 'Solicitar D-dímero. Se negativo: TVP excluída. Se positivo: duplex venoso.' };
+      if (s <= 2) return { label: `${s} — Probabilidade moderada`, color: 'yellow', rec: 'Duplex venoso indicado. D-dímero pode ser usado como triagem inicial.' };
+      return { label: `${s} — Alta probabilidade`, color: 'red', rec: 'Duplex venoso urgente. Considerar anticoagulação empírica enquanto aguarda resultado.' };
+    }
+  }
+  ,
+  {
+    id: 'stone',
+    name: 'STONE Score',
+    subtitle: 'Probabilidade de cólica nefrética — litíase ureteral',
+    sections: [{
+      fields: [
+        { id: 'sex', label: 'Sexo masculino', type: 'check', pts: '+2' },
+        { id: 'tempo', label: 'Tempo de sintomas ≤ 24 horas', type: 'check', pts: '+3' },
+        { id: 'origem', label: 'Origem não-negra (não afrodescendente)', type: 'check', pts: '+3' },
+        { id: 'nausea', label: 'Náuseas ou vômitos presentes', type: 'check', pts: '+1' },
+        { id: 'eritrocitos', label: 'Hematúria micro ou macroscópica', type: 'check', pts: '+1' },
+      ]
+    }],
+    calc: v => (v.sex?2:0)+(v.tempo?3:0)+(v.origem?3:0)+(v.nausea?1:0)+(v.eritrocitos?1:0),
+    interpret: s => {
+      if (s <= 5) return { label: `${s} — Baixa probabilidade (8,3%)`, color: 'green', rec: 'Considerar outros diagnósticos. Investigar causas alternativas de dor em flanco.' };
+      if (s <= 9) return { label: `${s} — Probabilidade moderada (51,6%)`, color: 'yellow', rec: 'Probabilidade moderada de litíase. Solicitar USG/TC e urina com sedimento.' };
+      return { label: `${s} — Alta probabilidade (89,6%)`, color: 'red', rec: 'Alta probabilidade de litíase ureteral. Analgesia, hidratação, investigar com TC de abdome sem contraste.' };
+    }
+  },
+  {
+    id: 'abcd2',
+    name: 'ABCD²',
+    subtitle: 'Risco de AVC nos 2 dias após AIT',
+    sections: [
+      {
+        title: 'Idade',
+        fields: [{ id: 'idade', type: 'radio', options: [
+          { value: '1', label: '≥ 60 anos', pts: '+1' },
+          { value: '0', label: '< 60 anos', pts: '0' },
+        ]}]
+      },
+      {
+        title: 'Pressão arterial na avaliação inicial',
+        fields: [{ id: 'pa', type: 'radio', options: [
+          { value: '1', label: 'PAS ≥ 140 mmHg ou PAD ≥ 90 mmHg', pts: '+1' },
+          { value: '0', label: 'Normotensão', pts: '0' },
+        ]}]
+      },
+      {
+        title: 'Clínica do AIT',
+        fields: [{ id: 'clinica', type: 'radio', options: [
+          { value: '2', label: 'Fraqueza unilateral', pts: '+2' },
+          { value: '1', label: 'Distúrbio de fala sem fraqueza', pts: '+1' },
+          { value: '0', label: 'Outros sintomas', pts: '0' },
+        ]}]
+      },
+      {
+        title: 'Duração dos sintomas',
+        fields: [{ id: 'duracao', type: 'radio', options: [
+          { value: '2', label: '≥ 60 minutos', pts: '+2' },
+          { value: '1', label: '10–59 minutos', pts: '+1' },
+          { value: '0', label: '< 10 minutos', pts: '0' },
+        ]}]
+      },
+      {
+        fields: [
+          { id: 'dm', label: 'Diabetes mellitus presente', type: 'check', pts: '+1' },
+        ]
+      }
+    ],
+    calc: v => (parseInt(v.idade)||0)+(parseInt(v.pa)||0)+(parseInt(v.clinica)||0)+(parseInt(v.duracao)||0)+(v.dm?1:0),
+    interpret: s => {
+      if (s <= 3) return { label: `${s} — Risco baixo (~1%)`, color: 'green', rec: 'Risco de AVC em 2 dias ~1%. Investigar causa do AIT ambulatorialmente com urgência. ECG, duplex de carótidas, RNM/TC e ecocardiograma.' };
+      if (s <= 5) return { label: `${s} — Risco moderado (~4%)`, color: 'yellow', rec: 'Risco de AVC em 2 dias ~4%. Considerar internação ou avaliação neurológica urgente em até 24h.' };
+      return { label: `${s} — Risco alto (~8%)`, color: 'red', rec: 'Risco de AVC em 2 dias ~8%. Internação indicada. Acionar neurologia.' };
+    }
+  },
+  {
+    id: 'canadian_head',
+    name: 'Canadian CT Head Rule',
+    subtitle: 'Indicação de TC de crânio no trauma craniano leve (Glasgow 13–15)',
+    sections: [
+      {
+        title: 'Alto risco — TC obrigatória',
+        fields: [
+          { id: 'gcs_15', label: 'Glasgow < 15 duas horas após trauma', type: 'check', pts: '' },
+          { id: 'suspeita_fratura', label: 'Suspeita de fratura de crânio aberta ou com afundamento', type: 'check', pts: '' },
+          { id: 'sinais_base', label: 'Sinais de fratura de base de crânio (equimose periorbitária, retroauricular, hemotímpano, fístula liquórica)', type: 'check', pts: '' },
+          { id: 'vomitos2', label: '2 ou mais episódios de vômito', type: 'check', pts: '' },
+          { id: 'idade65', label: 'Idade ≥ 65 anos', type: 'check', pts: '' },
+        ]
+      },
+      {
+        title: 'Risco moderado — TC recomendada (amnésia/perda de consciência)',
+        fields: [
+          { id: 'amnesia30', label: 'Amnésia anterógrada ≥ 30 minutos antes do impacto', type: 'check', pts: '' },
+          { id: 'mecanismo', label: 'Mecanismo perigoso (pedestre, ciclista, queda > 1m, ejeção de veículo)', type: 'check', pts: '' },
+        ]
+      }
+    ],
+    calc: v => 0,
+    interpret: (s, v) => {
+      const alto = v.gcs_15 || v.suspeita_fratura || v.sinais_base || v.vomitos2 || v.idade65;
+      const moderado = v.amnesia30 || v.mecanismo;
+      if (!alto && !moderado) return { label: 'TC não indicada', color: 'green', rec: 'Nenhum critério presente. Observação clínica. Alta com orientações de retorno.' };
+      if (alto) return { label: 'TC obrigatória — alto risco', color: 'red', rec: 'Critério de alto risco presente. Solicitar TC de crânio imediatamente.' };
+      return { label: 'TC recomendada — risco moderado', color: 'yellow', rec: 'Critério de risco moderado presente. Solicitar TC de crânio.' };
+    },
+    noNumber: true
+  },
+  {
+    id: 'nexus',
+    name: 'NEXUS — Coluna Cervical',
+    subtitle: 'Indicação de Rx cervical em trauma — critérios de baixo risco',
+    sections: [{
+      fields: [
+        { id: 'dor_linha', label: 'Dor à palpação da linha média cervical posterior', type: 'check', pts: '' },
+        { id: 'focal', label: 'Déficit neurológico focal', type: 'check', pts: '' },
+        { id: 'consciencia', label: 'Rebaixamento do nível de consciência', type: 'check', pts: '' },
+        { id: 'intox', label: 'Intoxicação por álcool ou drogas', type: 'check', pts: '' },
+        { id: 'distracao', label: 'Lesão dolorosa "distratora" (ex: fratura de extremidade)', type: 'check', pts: '' },
+      ]
+    }],
+    calc: v => ['dor_linha','focal','consciencia','intox','distracao'].filter(k => v[k]).length,
+    interpret: (s, v) => {
+      if (s === 0) return { label: 'Baixo risco — Rx não indicado', color: 'green', rec: 'Todos os critérios NEXUS negativos. Coluna cervical pode ser liberada clinicamente sem radiografia.' };
+      return { label: `${s} critério${s>1?'s':''} positivo${s>1?'s':''} — Rx indicado`, color: 'red', rec: 'Imobilizar coluna cervical. Solicitar Rx cervical em AP, perfil e boca aberta. Considerar TC se alta suspeita de fratura.' };
+    },
+    noNumber: true
+  }
+  ,
+  {
+    id: 'alvarado',
+    name: 'Alvarado',
+    subtitle: 'Probabilidade de apendicite aguda',
+    sections: [{
+      fields: [
+        { id: 'migracao', label: 'Migração da dor para FID', type: 'check', pts: '+1' },
+        { id: 'anorexia', label: 'Anorexia ou acetonúria', type: 'check', pts: '+1' },
+        { id: 'nausea', label: 'Náuseas ou vômitos', type: 'check', pts: '+1' },
+        { id: 'dor_fid', label: 'Dor à palpação em FID', type: 'check', pts: '+2' },
+        { id: 'descomp', label: 'Descompressão dolorosa (Blumberg)', type: 'check', pts: '+1' },
+        { id: 'febre', label: 'Temperatura > 37,3°C', type: 'check', pts: '+1' },
+        { id: 'leucocitose', label: 'Leucocitose > 10.000/mm³', type: 'check', pts: '+2' },
+      ]
+    }],
+    calc: v => (v.migracao?1:0)+(v.anorexia?1:0)+(v.nausea?1:0)+(v.dor_fid?2:0)+(v.descomp?1:0)+(v.febre?1:0)+(v.leucocitose?2:0),
+    interpret: s => {
+      if (s <= 3) return { label: `${s} — Baixa probabilidade`, color: 'green', rec: 'Apendicite improvável. Investigar outros diagnósticos. Alta com orientações de retorno se piora.' };
+      if (s <= 6) return { label: `${s} — Probabilidade moderada`, color: 'yellow', rec: 'Internação para observação, hidratação e reavaliação. Solicitar USG/TC de abdome.' };
+      return { label: `${s} — Alta probabilidade`, color: 'red', rec: 'Apendicite provável. Acionar cirurgia. NPO. Acesso venoso e hidratação.' };
+    }
+  },
+  {
+    id: 'perc',
+    name: 'PERC Rule',
+    subtitle: 'Exclusão de TEP sem exames em pacientes de baixo risco',
+    sections: [{
+      fields: [
+        { id: 'idade50', label: 'Idade ≥ 50 anos', type: 'check', pts: '' },
+        { id: 'fc100', label: 'FC ≥ 100 bpm', type: 'check', pts: '' },
+        { id: 'spo2', label: 'SpO2 < 95% em ar ambiente', type: 'check', pts: '' },
+        { id: 'tvp_tep', label: 'TVP ou TEP prévios', type: 'check', pts: '' },
+        { id: 'trauma', label: 'Trauma ou cirurgia nas últimas 4 semanas', type: 'check', pts: '' },
+        { id: 'hemoptise', label: 'Hemoptise', type: 'check', pts: '' },
+        { id: 'estrogeno', label: 'Uso de estrógeno exógeno', type: 'check', pts: '' },
+        { id: 'edema_unilat', label: 'Edema unilateral de MMII', type: 'check', pts: '' },
+      ]
+    }],
+    calc: v => ['idade50','fc100','spo2','tvp_tep','trauma','hemoptise','estrogeno','edema_unilat'].filter(k => v[k]).length,
+    interpret: (s) => {
+      if (s === 0) return { label: 'PERC negativo — TEP excluído', color: 'green', rec: 'Nenhum critério PERC presente. Em paciente de baixo risco (Wells ≤ 1), TEP pode ser excluído clinicamente sem D-dímero ou TC.' };
+      return { label: `${s} critério${s>1?'s':''} positivo${s>1?'s':''} — investigar`, color: 'red', rec: 'PERC positivo. Prosseguir investigação: D-dímero e/ou TC de tórax com angiografia conforme probabilidade clínica.' };
+    },
+    noNumber: true
+  }
+];
+const ANAMNESE_TEMPLATES = [
+  {
+    name: 'Faringoamigdalite / Odinofagia',
+    text: `QP: DOR DE GARGANTA HÁ ___ DIAS.
+
+HDA: PACIENTE REFERE ODINOFAGIA HÁ ___ DIAS, INTENSIDADE ___, COM FEBRE DE ATÉ ___°C. NEGA TOSSE, CORIZA OU DISFAGIA PARA SÓLIDOS.
+
+HPP: ___
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, CORADO, HIDRATADO, ___FEBRIL (___°C).
+OROFARINGE: HIPEREMIA ___, TONSILAS PALATINAS ___/4, ___ EXSUDATO.
+LINFONODOS: ___ CERVICAIS ANTERIORES.
+AC: RCR, 2T, BNF. AR: MV+ BILATERAL, SEM RA.`
+  },
+  {
+    name: 'IVAS / Resfriado Comum',
+    text: `QP: CORIZA E TOSSE HÁ ___ DIAS.
+
+HDA: PACIENTE REFERE QUADRO DE IVAS HÁ ___ DIAS, COM CORIZA ___, OBSTRUÇÃO NASAL E TOSSE ___. FEBRE DE ATÉ ___°C. NEGA DISPNEIA, OTALGIA OU ODINOFAGIA INTENSA.
+
+HPP: ___
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, ___FEBRIL (___°C).
+OROFARINGE: HIPEREMIA LEVE, SEM EXSUDATO, TONSILAS SEM HIPERTROFIA.
+OTOSCOPIA: CAE LIVRE, MEMBRANAS ÍNTEGRAS BILATERALMENTE.
+AR: MV+ BILATERAL, SEM RA. FR ___ IRPM. AC: RCR, 2T, BNF.`
+  },
+  {
+    name: 'Lombalgia',
+    text: `QP: DOR LOMBAR HÁ ___ DIAS.
+
+HDA: PACIENTE REFERE DOR LOMBAR HÁ ___ DIAS, CARÁTER ___, INTENSIDADE ___, ___ IRRADIAÇÃO PARA ___. PIORA COM ___, ALIVIA COM ___. NEGA FRAQUEZA EM MEMBROS INFERIORES, ALTERAÇÃO DE ESFÍNCTERES OU FEBRE.
+
+HPP: ___
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, SEM FÁCIES DE DOR EM REPOUSO.
+COLUNA: DOR À PALPAÇÃO DE PARAVERTEBRAIS LOMBARES ___. SEM DOR À PERCUSSÃO DE APÓFISES ESPINHOSAS.
+LASEGUE: ___
+MMII: FORÇA ___, SENSIBILIDADE ___, ROT ___.`
+  },
+  {
+    name: 'Dor Abdominal',
+    text: `QP: DOR ABDOMINAL HÁ ___ HORAS.
+
+HDA: PACIENTE REFERE DOR EM ___, CARÁTER ___, INTENSIDADE ___, ___ IRRADIAÇÃO. ___ NÁUSEAS, ___ VÔMITOS, ___ ALTERAÇÃO DO HÁBITO INTESTINAL. ÚLTIMA EVACUAÇÃO ___. NEGA FEBRE, DISÚRIA.
+
+HPP: ___ CIRURGIAS ABDOMINAIS PRÉVIAS: ___
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, CORADO, HIDRATADO.
+ABDOME: ___, RHA ___, FLÁCIDO, DOLOROSO À PALPAÇÃO ___ EM ___. BLUMBERG ___. MURPHY ___. SEM MASSAS OU VISCEROMEGALIAS.`
+  },
+  {
+    name: 'ITU / Disúria',
+    text: `QP: DISÚRIA E POLACIÚRIA HÁ ___ DIAS.
+
+HDA: PACIENTE REFERE DISÚRIA, POLACIÚRIA E URGÊNCIA MICCIONAL HÁ ___ DIAS. ___ HEMATÚRIA. ___ FEBRE. NEGA DOR LOMBAR. DUM: ___.
+
+HPP: ITU PRÉVIA: ___. DM: ___.
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, ___FEBRIL (___°C).
+ABDOME: FLÁCIDO, LEVE DESCONFORTO EM HIPOGÁSTRIO. GIORDANO NEGATIVO BILATERALMENTE.`
+  },
+  {
+    name: 'Cólica Renal / Dor em Flanco',
+    text: `QP: DOR EM FLANCO ___ HÁ ___ HORAS.
+
+HDA: PACIENTE REFERE DOR EM FLANCO ___ DE INÍCIO SÚBITO, CARÁTER CÓLICO, INTENSIDADE ___, COM IRRADIAÇÃO PARA ___. ___ NÁUSEAS, ___ VÔMITOS. ___ HEMATÚRIA. NEGA FEBRE.
+
+HPP: LITÍASE PRÉVIA: ___.
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: AGITADO, COM FÁCIES DE DOR.
+ABDOME: RHA+, FLÁCIDO, DOLOROSO À PALPAÇÃO EM FLANCO ___.
+GIORDANO: POSITIVO À ___.`
+  },
+  {
+    name: 'Cefaleia',
+    text: `QP: CEFALEIA HÁ ___ HORAS.
+
+HDA: PACIENTE REFERE CEFALEIA EM ___, CARÁTER ___, INTENSIDADE ___, INÍCIO ___. ___ FOTOFOBIA, ___ FONOFOBIA, ___ NÁUSEAS. NEGA FEBRE, RIGIDEZ DE NUCA, DÉFICIT NEUROLÓGICO E TRAUMA RECENTE. EPISÓDIOS SEMELHANTES PRÉVIOS: ___.
+
+HPP: MIGRÂNEA ___. HAS ___.
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, AFEBRIL. PA: ___ MMHG.
+NEUROLÓGICO: CONSCIENTE, ORIENTADO, PUPILAS ISOCÓRICAS E FOTORREAGENTES, SEM DÉFICIT FOCAL.
+KERNIG ___. BRUDZINSKI ___.`
+  },
+  {
+    name: 'Dor Torácica',
+    text: `QP: DOR NO PEITO HÁ ___ HORAS.
+
+HDA: PACIENTE REFERE DOR TORÁCICA EM ___, CARÁTER ___, INTENSIDADE ___, ___ IRRADIAÇÃO PARA ___. INÍCIO ___. ___ DISPNEIA, ___ SUDORESE, ___ NÁUSEAS. PIORA COM ___, MELHORA COM ___.
+
+FRCV: HAS ___, DM ___, TABAGISMO ___, DISLIPIDEMIA ___, HF PARA CORONARIOPATIA ___.
+
+HPP: IAM OU ANGINA PRÉVIOS: ___
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, CORADO. SPO2 ___% FC ___ PA ___ MMHG.
+AC: RCR, 2T, BNF, SEM SOPROS. AR: MV+ BILATERAL, SEM RA.
+MMII: ___ EDEMA.`
+  },
+  {
+    name: 'Dispneia',
+    text: `QP: FALTA DE AR HÁ ___ HORAS.
+
+HDA: PACIENTE REFERE DISPNEIA ___, INÍCIO ___. SPO2 ___%. ___ TOSSE, ___ FEBRE, ___ SIBILÂNCIA, ___ ORTOPNEIA. NEGA DOR TORÁCICA.
+
+HPP: ASMA/DPOC ___, ICC ___, TEP PRÉVIO ___.
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, SPO2 ___%, ___ MUSCULATURA ACESSÓRIA, ___ CIANOSE. FR ___ IRPM.
+AC: RCR, 2T, BNF. FC ___. AR: MV ___, ___. ___ SIBILOS. ___ CREPITAÇÕES.
+MMII: ___ EDEMA.`
+  },
+  {
+    name: 'Febre Sem Foco',
+    text: `QP: FEBRE HÁ ___ DIAS.
+
+HDA: PACIENTE REFERE FEBRE DE ATÉ ___°C HÁ ___ DIAS, ___ CALAFRIOS. NEGA TOSSE PRODUTIVA, DISÚRIA, DOR ABDOMINAL OU DIARREIA. VIAGEM RECENTE: ___.
+
+HPP: ___. IMUNOSSUPRESSÃO: ___.
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, FEBRIL (___°C), CORADO, HIDRATADO.
+OROFARINGE: ___. LINFONODOS: ___. PELE: ___.
+AR: MV+ BILATERAL, SEM RA. AC: RCR, 2T, BNF.
+ABDOME: RHA+, FLÁCIDO, INDOLOR, SEM VISCEROMEGALIAS.`
+  },
+  {
+    name: 'Trauma de Extremidade',
+    text: `QP: DOR EM ___ APÓS TRAUMA HÁ ___ HORAS.
+
+HDA: PACIENTE REFERE TRAUMA EM ___ APÓS ___. DOR LOCAL INTENSIDADE ___. ___ EDEMA, ___ EQUIMOSE, ___ DEFORMIDADE. ___ CONSEGUE APOIAR/MOVIMENTAR. NEGA DORMÊNCIA OU FORMIGAMENTO DISTAL.
+
+HPP: ___
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+INSPEÇÃO: ___ EDEMA, ___ EQUIMOSE, ___ DEFORMIDADE, ___ FERIMENTO ABERTO.
+PALPAÇÃO: DOR EM ___, ___ CREPITAÇÃO.
+VASCULAR DISTAL: PULSO ___, ENCHIMENTO CAPILAR ___ SEG.
+NEUROLÓGICO DISTAL: SENSIBILIDADE ___, FORÇA ___.`
+  },
+  {
+    name: 'Crise Hipertensiva',
+    text: `QP: PRESSÃO ELEVADA.
+
+HDA: PACIENTE TRAZ PA DE ___X___ MMHG. ___ CEFALEIA, ___ DISPNEIA, ___ DOR TORÁCICA, ___ ALTERAÇÕES VISUAIS, ___ DÉFICIT NEUROLÓGICO.
+
+HPP: HAS HÁ ___ ANOS, EM USO DE ___. DM ___. CARDIOPATIA ___. AVC PRÉVIO ___.
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, PA ___X___ MMHG, FC ___.
+NEUROLÓGICO: CONSCIENTE, ORIENTADO, SEM DÉFICIT FOCAL, PUPILAS ___.
+AC: RCR, 2T, BNF, SEM SOPROS. AR: MV+ BILATERAL, ___.
+MMII: ___ EDEMA.`
+  },
+  {
+    name: 'Dermatite / Lesão de Pele',
+    text: `QP: LESÃO EM ___ HÁ ___ DIAS.
+
+HDA: PACIENTE REFERE SURGIMENTO DE ___ EM ___, ___ PRURIDO, ___ DOR LOCAL. ___ DISSEMINAÇÃO PROGRESSIVA. ___ FEBRE. CONTATO RECENTE COM NOVAS SUBSTÂNCIAS OU MEDICAMENTOS: ___. HISTÓRICO DE ALERGIAS: ___.
+
+HPP: DERMATITES PRÉVIAS: ___.
+
+ALERGIAS MEDICAMENTOSAS: ___
+
+EXAME FÍSICO:
+GERAL: ___, ___FEBRIL.
+PELE: ___ EM ___, ___.
+LINFONODOS REGIONAIS: ___.`
+  },
+];
+
+// ─── DATA ────────────────────────────────────────────────────
+const STORAGE_KEY = 'condutas_v1';
+let data = [], editingId = null, deletingId = null, selectedId = null, searchTerm = '';
+let activeTab = 'condutas', selectedScoreId = null, scoreValues = {};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    data = raw ? JSON.parse(raw) : sampleData();
+    data.forEach(d => {
+      if (!d.anamnese) d.anamnese = '';
+      if (!d.exames) d.exames = '';
+      if (!d.alergia) d.alergia = '';
+      if (!d.tag) d.tag = '';
+    });
+  } catch { data = sampleData(); }
+}
+
+function persist() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+function sampleData() {
+  return [
+    {
+      id: uid(), name: 'AMIGDALITE AGUDA BACTERIANA', tag: 'OTORRINO',
+      anamnese: 'QP: dor de garganta há ___ dias\n\nHDA: Dor de garganta de início ___, associada a ___. Refere febre de ___°C. Nega tosse. Nega coriza.\n\nHPP: ___\n\nALERGIAS MEDICAMENTOSAS: ___\n\nEXAME FÍSICO:\n  - Geral: BEG, corado, hidratado, afebril/febril (___°C)\n  - AC: RCR, 2T, BNF, sem sopros\n  - AR: MV+ bilateral, sem RA\n  - Orofaringe: hiperemia e hipertrofia de tonsilas palatinas ___/4, com/sem exsudato\n  - Linfonodos: ___ cervicais palpáveis',
+      exames: 'Sem necessidade de exames na maioria dos casos.\n\nConsiderar:\n- Teste rápido para Streptococcus (TASO) se disponível\n- Hemograma + PCR se suspeita de complicação',
+      body: 'VIA ORAL\n\n1) AMOXICILINA 500MG ---------------------------------- 30 CPS\n   TOMAR 01 CÁPSULA DE 8 EM 8 HORAS POR 10 DIAS\n\n2) DIPIRONA 500MG ------------------------------------- 01 CX\n   TOMAR 01 COMPRIMIDO DE 6 EM 6 HORAS SE DOR OU FEBRE',
+      alergia: 'Se alérgico à penicilina:\n\nVIA ORAL\n\n1) AZITROMICINA 500MG --------------------------------- 05 CPS\n   TOMAR 01 CÁPSULA 1X AO DIA POR 5 DIAS\n\n2) DIPIRONA 500MG ------------------------------------- 01 CX\n   TOMAR 01 COMPRIMIDO DE 6 EM 6 HORAS SE DOR OU FEBRE'
+    },
+    {
+      id: uid(), name: 'CEFALEIA TENSIONAL SEM SINAIS DE ALARME', tag: 'NEUROLÓGICO',
+      anamnese: 'QP: dor de cabeça há ___ horas/dias\n\nHDA: Cefaleia de caráter ___ (aperto/pressão), localização ___, intensidade ___/10, sem náuseas ou vômitos. Sem fotofobia ou fonofobia. Nega febre. Nega rigidez de nuca. Nega déficit neurológico focal.\n\nHPP: ___\n\nALERGIAS MEDICAMENTOSAS: ___\n\nEXAME FÍSICO:\n  - Geral: BEG, corado, hidratado\n  - Neurológico: consciente, orientado, pupilas isocóricas e fotorreagentes, sem déficit motor\n  - Meníngeos: Kernig e Brudzinski negativos',
+      exames: 'Cefaleia tensional típica: NÃO solicitar exames.\n\nSinais de alarme (cefaleia "em trovão", progressiva, com febre/rigidez, focal, > 50 anos): avaliar TC de crânio.',
+      body: 'VIA ORAL\n\n1) DIPIRONA 500MG ------------------------------------- 01 CX\n   TOMAR 01 COMPRIMIDO DE 6 EM 6 HORAS SE DOR\n\n2) IBUPROFENO 600MG ----------------------------------- 01 CX\n   TOMAR 01 COMPRIMIDO DE 12 EM 12 HORAS SE DOR REFRATÁRIA À DIPIRONA\n   PREFERIR TOMAR PRÓXIMO ÀS REFEIÇÕES PRINCIPAIS',
+      alergia: ''
+    },
+    {
+      id: uid(), name: 'PNEUMONIA ADQUIRIDA NA COMUNIDADE', tag: 'RESPIRATÓRIO',
+      anamnese: 'QP: tosse e febre há ___ dias\n\nHDA: Tosse produtiva com expectoração ___, febre de ___°C, calafrios. Refere dispneia ___ (repouso/esforço). Nega hemoptise.\n\nHPP: ___\n\nALERGIAS MEDICAMENTOSAS: ___\n\nEXAME FÍSICO:\n  - Geral: REG/BEG, febril (___°C), SpO2: ___%\n  - AC: RCR, 2T, BNF\n  - AR: MV+, ___. Crepitações em ___. FR: ___ irpm\n  - Abdome: sem alterações\n  - Outros: ___',
+      exames: '- Rx de tórax PA e perfil\n- Hemograma completo\n- PCR ou VHS\n- Ureia e creatinina (para CURB-65)\n- Glicemia\n- Oximetria de pulso\n\nConsiderar:\n- Hemocultura (2 amostras) se internação\n- Antígeno urinário pneumococo/Legionella se grave',
+      body: 'VIA ORAL (CURB-65 0–1)\n\n1) AMOXICILINA + CLAVULANATO 875/125MG --------------- 14 CPS\n   TOMAR 01 CÁPSULA DE 12 EM 12 HORAS POR 7 DIAS\n\n2) AZITROMICINA 500MG --------------------------------- 05 CPS\n   TOMAR 01 CÁPSULA 1X AO DIA POR 5 DIAS\n\n3) DIPIRONA 500MG ------------------------------------- 01 CX\n   TOMAR 01 COMPRIMIDO DE 6 EM 6 HORAS SE FEBRE OU DOR',
+      alergia: 'Se alérgico à penicilina:\n\nVIA ORAL\n\n1) LEVOFLOXACINO 500MG -------------------------------- 07 CPS\n   TOMAR 01 CÁPSULA 1X AO DIA POR 7 DIAS'
+    }
+  ];
+}
+
+// ─── SORT / FILTER ───────────────────────────────────────────
+function sorted(arr) { return [...arr].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')); }
+
+function filtered() {
+  if (!searchTerm && !activeTagFilter) return sorted(data);
+  const q = searchTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  return sorted(data).filter(d => {
+    const matchTag = !activeTagFilter || d.tag === activeTagFilter;
+    const matchSearch = !searchTerm || norm(d.name).includes(q) || norm(d.body).includes(q) || norm(d.anamnese).includes(q) || norm(d.exames).includes(q) || norm(d.alergia).includes(q);
+    return matchTag && matchSearch;
+  });
+}
+
+// ─── TABS ────────────────────────────────────────────────────
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.getElementById('tab-condutas').classList.toggle('active', tab === 'condutas');
+  document.getElementById('tab-escores').classList.toggle('active', tab === 'escores');
+  document.getElementById('btn-new').style.display = tab === 'condutas' ? '' : 'none';
+  if (tab === 'escores') showView('empty');
+  else if (selectedId) showView('conduta');
+  else showView('empty');
+}
+
+// ─── RENDER CONDUTAS ─────────────────────────────────────────
+function render() {
+  const listEl = document.getElementById('list');
+  const countLabel = document.getElementById('count-label');
+  const azBar = document.getElementById('az-bar');
+  const items = filtered();
+
+  countLabel.innerHTML = `<span>${items.length}</span> conduta${items.length !== 1 ? 's' : ''}`;
+
+  if (items.length === 0) {
+    listEl.innerHTML = '<div style="text-align:center;padding:32px 16px;font-size:12px;color:var(--text-muted)">Nenhuma conduta encontrada.</div>';
+    renderAZ([]); return;
+  }
+
+  const groups = {};
+  items.forEach(item => {
+    const l = item.name[0].toUpperCase();
+    if (!groups[l]) groups[l] = [];
+    groups[l].push(item);
+  });
+
+  renderTagFilter();
+  azBar.classList.toggle('hidden', !!searchTerm);
+  if (!searchTerm) renderAZ(Object.keys(groups));
+
+  let idx = 0, html = '';
+  Object.keys(groups).sort().forEach(letter => {
+    html += `<div class="letter-divider" id="letter-${letter}">${letter}</div>`;
+    groups[letter].forEach(item => {
+      const safeId = escHtml(item.id);
+      const dots = [
+        item.anamnese?.trim() ? '<div class="item-dot purple" title="Anamnese"></div>' : '',
+        item.exames?.trim() ? '<div class="item-dot orange" title="Exames"></div>' : '',
+        item.alergia?.trim() ? '<div class="item-dot red" title="Alergia"></div>' : '',
+      ].join('');
+      const tagC = item.tag && TAG_COLORS[item.tag];
+      const tagBadge = item.tag ? `<span class="tag-badge" style="background:${tagC?.bg||'#eee'};border:1px solid ${tagC?.border||'#ccc'};color:${tagC?.text||'#666'}">${item.tag}</span>` : '';
+      html += `<div class="list-item ${item.id === selectedId ? 'active' : ''}" id="li-${safeId}" onclick="selectItem('${safeId}')">
+        <span class="item-idx">${String(++idx).padStart(2,'0')}</span>
+        <div style="flex:1;min-width:0">
+          <div class="item-name">${highlight(escHtml(item.name), searchTerm)}</div>
+          ${tagBadge}
+        </div>
+        ${dots ? `<div class="item-dots">${dots}</div>` : ''}
+      </div>`;
+    });
+  });
+  listEl.innerHTML = html;
+}
+
+// ─── RENDER SCORE LIST ───────────────────────────────────────
+function renderScoreList() {
+  const el = document.getElementById('score-list');
+  el.innerHTML = SCORES.map(s => `
+    <div class="score-list-item ${s.id === selectedScoreId ? 'active' : ''}" id="sli-${s.id}" onclick="selectScore('${s.id}')">
+      <div class="score-list-name">${s.name}</div>
+      <div class="score-list-sub">${s.subtitle}</div>
+    </div>`).join('');
+}
+
+// ─── A-Z ─────────────────────────────────────────────────────
+function renderAZ(active) {
+  const s = new Set(active);
+  document.getElementById('az-bar').innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l =>
+    `<button class="az-btn ${s.has(l) ? 'active' : ''}" ${s.has(l) ? `onclick="jumpToLetter('${l}')"` : 'disabled'}>${l}</button>`
+  ).join('');
+}
+
+function jumpToLetter(l) {
+  const el = document.getElementById('letter-' + l);
+  if (!el) return;
+  document.querySelectorAll('.az-btn').forEach(b => b.classList.remove('current'));
+  document.querySelectorAll('.az-btn').forEach(b => { if (b.textContent === l) b.classList.add('current'); });
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => document.querySelectorAll('.az-btn').forEach(b => b.classList.remove('current')), 1200);
+}
+
+// ─── VIEW MANAGEMENT ─────────────────────────────────────────
+function showView(which) {
+  ['view-empty','view-conduta','view-score'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.toggle('visible', id === 'view-' + which);
+  });
+}
+
+// ─── SELECT CONDUTA ──────────────────────────────────────────
+function selectItem(id) {
+  selectedId = id;
+  selectedScoreId = null;
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+
+  document.querySelectorAll('.list-item').forEach(el => el.classList.remove('active'));
+  const li = document.getElementById('li-' + id);
+  if (li) li.classList.add('active');
+
+  document.getElementById('detail-title').textContent = item.name;
+  document.getElementById('detail-anamnese').textContent = item.anamnese || '';
+  document.getElementById('detail-exames').textContent = item.exames || '';
+  document.getElementById('detail-body').textContent = item.body || '';
+  document.getElementById('detail-alergia').textContent = item.alergia || '';
+
+  document.getElementById('sec-anamnese').style.display = item.anamnese?.trim() ? '' : 'none';
+  document.getElementById('sec-exames').style.display = item.exames?.trim() ? '' : 'none';
+  document.getElementById('sec-alergia').style.display = item.alergia?.trim() ? '' : 'none';
+
+  showView('conduta');
+}
+
+function clearDetail() { selectedId = null; showView('empty'); }
+
+// ─── SELECT SCORE ────────────────────────────────────────────
+function selectScore(id) {
+  selectedScoreId = id;
+  selectedId = null;
+  scoreValues = {};
+
+  document.querySelectorAll('.score-list-item').forEach(el => el.classList.remove('active'));
+  const li = document.getElementById('sli-' + id);
+  if (li) li.classList.add('active');
+
+  const score = SCORES.find(s => s.id === id);
+  document.getElementById('score-calc-name').textContent = score.name;
+  document.getElementById('score-calc-subtitle').textContent = score.subtitle;
+
+  // Render fields
+  const container = document.getElementById('score-fields-container');
+  container.innerHTML = score.sections.map(section => `
+    <div class="score-fields-block">
+      ${section.title ? `<div class="score-section-title">${section.title}</div>` : ''}
+      <div class="score-fields">
+        ${section.fields.map(field => renderScoreField(field)).join('')}
+      </div>
+    </div>`).join('');
+
+  // Attach listeners
+  container.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('change', () => recalculate(score));
+  });
+
+  // Reset result
+  document.getElementById('score-result').className = 'score-result';
+  document.getElementById('score-result').innerHTML = '<div class="score-result-pending">Preencha os campos acima para calcular.</div>';
+
+  showView('score');
+}
+
+function renderScoreField(field) {
+  if (field.type === 'check') {
+    const pts = field.pts ? `<span class="pts ${field.pts.startsWith('+') ? 'pos' : field.pts.startsWith('−') || field.pts.startsWith('-') ? 'neg' : ''}">${field.pts}</span>` : '';
+    return `<label class="score-field" onclick="">
+      <input type="checkbox" name="${field.id}" id="sf-${field.id}">
+      <label for="sf-${field.id}">${field.label}</label>
+      ${pts}
+    </label>`;
+  }
+  if (field.type === 'radio') {
+    return field.options.map(opt => `
+      <label class="score-field">
+        <input type="radio" name="${field.id}" value="${opt.value}">
+        <label>${opt.label}</label>
+        ${opt.pts ? `<span class="pts">${opt.pts}</span>` : ''}
+      </label>`).join('');
+  }
+  return '';
+}
+
+function recalculate(score) {
+  const v = {};
+  document.querySelectorAll('#score-fields-container input').forEach(el => {
+    if (el.type === 'checkbox') v[el.name] = el.checked;
+    else if (el.type === 'radio' && el.checked) v[el.name] = el.value;
+  });
+  scoreValues = v;
+
+  const s = score.calc(v);
+  const result = score.interpret(s, v);
+  if (!result) return;
+
+  const el = document.getElementById('score-result');
+  el.className = `score-result ${result.color}`;
+  el.innerHTML = `
+    <div class="score-result-top">
+      ${!score.noNumber ? `<div class="score-number">${s}</div>` : ''}
+      <div class="score-result-label">${result.label}</div>
+    </div>
+    <div class="score-result-rec">${result.rec}</div>`;
+}
+
+function resetScore() {
+  if (!selectedScoreId) return;
+  document.querySelectorAll('#score-fields-container input').forEach(el => {
+    if (el.type === 'checkbox') el.checked = false;
+    else if (el.type === 'radio') el.checked = false;
+  });
+  scoreValues = {};
+  document.getElementById('score-result').className = 'score-result';
+  document.getElementById('score-result').innerHTML = '<div class="score-result-pending">Preencha os campos acima para calcular.</div>';
+}
+
+// ─── COPY ────────────────────────────────────────────────────
+function copySection(which) {
+  const item = data.find(d => d.id === selectedId);
+  if (!item) return;
+  const map = { anamnese: item.anamnese, exames: item.exames, prescricao: item.body, alergia: item.alergia };
+  const btnMap = { anamnese: 'copy-anamnese', exames: 'copy-exames', prescricao: 'copy-prescricao', alergia: 'copy-alergia' };
+  navigator.clipboard.writeText(map[which] || '').then(() => {
+    const btn = document.getElementById(btnMap[which]);
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg viewBox="0 0 14 14"><path d="M2 7l4 4 6-6" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/></svg> Copiado!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg viewBox="0 0 14 14"><rect x="4" y="4" width="8" height="9" rx="1"/><path d="M10 4V3a1 1 0 00-1-1H3a1 1 0 00-1 1v8a1 1 0 001 1h1"/></svg> Copiar`;
+    }, 2000);
+  }).catch(() => showToast('Erro ao copiar.'));
+}
+
+// ─── SEARCH ──────────────────────────────────────────────────
+function handleSearch(val) {
+  searchTerm = val.trim();
+  document.getElementById('search-clear').style.display = searchTerm ? 'flex' : 'none';
+  render();
+}
+function clearSearch() { document.getElementById('search').value = ''; handleSearch(''); }
+
+// ─── MODAL ───────────────────────────────────────────────────
+function openModal() {
+  editingId = null;
+  document.getElementById('modal-title').textContent = 'Nova conduta';
+  ['field-name','field-anamnese','field-exames','field-body','field-alergia'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('field-tag').value = '';
+  document.getElementById('modal-overlay').classList.add('active');
+  setTimeout(() => document.getElementById('field-name').focus(), 80);
+}
+function openEditSelected() { if (selectedId) openEdit(selectedId); }
+function openEdit(id) {
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent = 'Editar conduta';
+  document.getElementById('field-tag').value = item.tag || '';
+  document.getElementById('field-name').value = item.name;
+  document.getElementById('field-anamnese').value = item.anamnese || '';
+  document.getElementById('field-exames').value = item.exames || '';
+  document.getElementById('field-body').value = item.body;
+  document.getElementById('field-alergia').value = item.alergia || '';
+  document.getElementById('modal-overlay').classList.add('active');
+  setTimeout(() => document.getElementById('field-name').focus(), 80);
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); editingId = null; }
+function overlayClose(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+
+function save() {
+  const name = document.getElementById('field-name').value.trim().toUpperCase();
+  const anamnese = document.getElementById('field-anamnese').value.trim();
+  const exames = document.getElementById('field-exames').value.trim();
+  const body = document.getElementById('field-body').value.trim();
+  const alergia = document.getElementById('field-alergia').value.trim();
+  const tag = document.getElementById('field-tag').value;
+  if (!name) { shake('field-name'); return; }
+  if (!body) { shake('field-body'); return; }
+
+  let savedId;
+  if (editingId) {
+    const item = data.find(d => d.id === editingId);
+    if (item) Object.assign(item, { name, anamnese, exames, body, alergia, tag });
+    savedId = editingId;
+  } else {
+    const newItem = { id: uid(), name, anamnese, exames, body, alergia, tag };
+    data.push(newItem);
+    savedId = newItem.id;
+  }
+  persist(); render(); closeModal();
+  showToast(editingId ? 'Conduta atualizada.' : 'Conduta adicionada.');
+  setTimeout(() => selectItem(savedId), 50);
+}
+
+function shake(fieldId) {
+  const el = document.getElementById(fieldId);
+  el.style.animation = 'none'; el.offsetHeight; el.style.animation = 'shake 0.35s ease'; el.focus();
+}
+
+// ─── DELETE ──────────────────────────────────────────────────
+function askDeleteSelected() { if (selectedId) askDelete(selectedId); }
+function askDelete(id) {
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+  deletingId = id;
+  document.getElementById('confirm-msg').textContent = `"${item.name}" será excluída permanentemente.`;
+  document.getElementById('confirm-overlay').classList.add('active');
+}
+function closeConfirm() { document.getElementById('confirm-overlay').classList.remove('active'); deletingId = null; }
+function confirmOverlayClose(e) { if (e.target === document.getElementById('confirm-overlay')) closeConfirm(); }
+function confirmDelete() {
+  const wasSelected = deletingId === selectedId;
+  data = data.filter(d => d.id !== deletingId);
+  persist(); render(); closeConfirm();
+  showToast('Conduta excluída.');
+  if (wasSelected) clearDetail();
+}
+
+// ─── EXPORT / IMPORT ─────────────────────────────────────────
+function exportData() {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = `condutas-${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(url); showToast('Exportado com sucesso.');
+}
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.json,application/json';
+  input.onchange = e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const parsed = JSON.parse(ev.target.result);
+        if (!Array.isArray(parsed) || !parsed.every(d => d.id && d.name && d.body)) throw new Error();
+        const ids = new Set(data.map(d => d.id));
+        let added = 0;
+        parsed.forEach(d => { if (!ids.has(d.id)) { data.push({ exames: '', anamnese: '', alergia: '', ...d }); added++; } });
+        persist(); render();
+        showToast(added > 0 ? `${added} conduta${added !== 1 ? 's' : ''} importada${added !== 1 ? 's' : ''}.` : 'Nenhuma conduta nova.');
+      } catch { showToast('Arquivo inválido.'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// ─── TEMPLATE PICKER ─────────────────────────────────────────
+function openTemplatePicker() {
+  const list = document.getElementById('template-list');
+  list.innerHTML = ANAMNESE_TEMPLATES.map((t, i) =>
+    `<div class="template-item" onclick="applyTemplate(${i})">${t.name}</div>`
+  ).join('');
+  document.getElementById('template-overlay').classList.add('active');
+}
+
+function closeTemplatePicker() {
+  document.getElementById('template-overlay').classList.remove('active');
+}
+
+function templateOverlayClose(e) {
+  if (e.target === document.getElementById('template-overlay')) closeTemplatePicker();
+}
+
+function applyTemplate(idx) {
+  const t = ANAMNESE_TEMPLATES[idx];
+  document.getElementById('field-anamnese').value = t.text;
+  closeTemplatePicker();
+  document.getElementById('field-anamnese').focus();
+}
+
+// ─── TAG SYSTEM ──────────────────────────────────────────────
+const TAG_COLORS = {
+  'RESPIRATÓRIO':       { bg: '#EBF5FB', border: '#5DADE2', text: '#1A6C9A' },
+  'CARDIOVASCULAR':     { bg: '#FDEDEC', border: '#E74C3C', text: '#A93226' },
+  'DIGESTIVO':          { bg: '#FEF9E7', border: '#F0B429', text: '#9A6A00' },
+  'URINÁRIO':           { bg: '#EAF2FF', border: '#5B9BD5', text: '#1F5F9E' },
+  'NEUROLÓGICO':        { bg: '#F4ECF7', border: '#9B59B6', text: '#6C3483' },
+  'MUSCULOESQUELÉTICO': { bg: '#F2F3F4', border: '#95A5A6', text: '#5D6D7E' },
+  'PELE':               { bg: '#FEF5EC', border: '#E67E22', text: '#A04000' },
+  'INFECTOLOGIA':       { bg: '#EAFAF1', border: '#2ECC71', text: '#1A7A45' },
+  'OTORRINO':           { bg: '#EBF5FB', border: '#1ABC9C', text: '#0E6655' },
+  'GERAL':              { bg: '#F2F3F4', border: '#AAB7B8', text: '#5D6D7E' },
+};
+
+let activeTagFilter = '';
+
+function renderTagFilter() {
+  const bar = document.getElementById('tag-filter-bar');
+  const tags = [...new Set(data.map(d => d.tag).filter(Boolean))].sort();
+  if (tags.length === 0) { bar.innerHTML = ''; return; }
+  bar.innerHTML =
+    `<button class="tag-filter-btn all ${!activeTagFilter ? 'active' : ''}" onclick="setTagFilter('')">TODAS</button>` +
+    tags.map(t => {
+      const c = TAG_COLORS[t] || {};
+      const isActive = activeTagFilter === t;
+      const style = isActive ? `background:${c.bg};border-color:${c.border};color:${c.text}` : '';
+      return `<button class="tag-filter-btn ${isActive ? 'active' : ''}" style="${style}" onclick="setTagFilter('${t}')">${t}</button>`;
+    }).join('');
+}
+
+function setTagFilter(tag) {
+  activeTagFilter = tag;
+  renderTagFilter();
+  render();
+}
+
+// ─── NOTES ───────────────────────────────────────────────────
+const NOTES_KEY = 'condutas_notes';
+
+function toggleNotes() {
+  const overlay = document.getElementById('notes-overlay');
+  if (!overlay.classList.contains('active')) {
+    document.getElementById('notes-textarea').value = localStorage.getItem(NOTES_KEY) || '';
+    const today = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit' });
+    document.getElementById('notes-date').textContent = today.toUpperCase();
+    overlay.classList.add('active');
+    setTimeout(() => document.getElementById('notes-textarea').focus(), 80);
+  } else {
+    overlay.classList.remove('active');
+  }
+}
+
+function saveNotes() {
+  localStorage.setItem(NOTES_KEY, document.getElementById('notes-textarea').value);
+}
+
+function clearNotes() {
+  if (!confirm('LIMPAR TODAS AS NOTAS?')) return;
+  localStorage.removeItem(NOTES_KEY);
+  document.getElementById('notes-textarea').value = '';
+}
+
+function notesOverlayClose(e) {
+  if (e.target === document.getElementById('notes-overlay')) toggleNotes();
+}
+
+// ─── EXPORT INDIVIDUAL ───────────────────────────────────────
+function toggleExportMenu(e) {
+  e.stopPropagation();
+  document.getElementById('export-menu').classList.toggle('open');
+}
+
+document.addEventListener('click', () => {
+  const m = document.getElementById('export-menu');
+  if (m) m.classList.remove('open');
+});
+
+function exportTxt() {
+  const item = data.find(d => d.id === selectedId);
+  if (!item) return;
+  document.getElementById('export-menu').classList.remove('open');
+  let txt = item.name + '\n' + '='.repeat(item.name.length) + '\n\n';
+  if (item.anamnese?.trim()) txt += 'ANAMNESE\n' + '-'.repeat(40) + '\n' + item.anamnese + '\n\n';
+  if (item.exames?.trim())   txt += 'EXAMES SUGERIDOS\n' + '-'.repeat(40) + '\n' + item.exames + '\n\n';
+  txt += 'PRESCRIÇÃO\n' + '-'.repeat(40) + '\n' + item.body;
+  if (item.alergia?.trim())  txt += '\n\nALTERNATIVA POR ALERGIA\n' + '-'.repeat(40) + '\n' + item.alergia;
+
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = item.name.replace(/[^A-Z0-9]/gi, '_').replace(/_+/g,'_').toLowerCase() + '.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Conduta exportada.');
+}
+
+function exportPrint() {
+  document.getElementById('export-menu').classList.remove('open');
+  window.print();
+}
+
+// ─── PWA ─────────────────────────────────────────────────────
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
+
+// ─── TOAST ───────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2300);
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function highlight(text, term) {
+  if (!term) return text;
+  return text.replace(new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<mark>$1</mark>');
+}
+
+// ─── KEYBOARD ────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('notes-overlay').classList.contains('active')) toggleNotes();
+    else if (document.getElementById('template-overlay').classList.contains('active')) closeTemplatePicker();
+    else if (document.getElementById('confirm-overlay').classList.contains('active')) closeConfirm();
+    else if (document.getElementById('modal-overlay').classList.contains('active')) closeModal();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); document.getElementById('search').focus(); document.getElementById('search').select(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); if (activeTab === 'condutas') openModal(); }
+});
+
+// ─── INIT ────────────────────────────────────────────────────
+load();
+render();
+renderScoreList();
+if (data.length > 0) setTimeout(() => selectItem(sorted(data)[0].id), 50);
+</script>
+</body>
+</html>
