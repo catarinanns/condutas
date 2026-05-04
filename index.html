@@ -1407,23 +1407,52 @@ LINFONODOS REGIONAIS: ___.`
 
 // ─── DATA ────────────────────────────────────────────────────
 const STORAGE_KEY = 'condutas_v1';
+const JSONBIN_ID  = '69f86f61aaba8821976c20b7';
+const JSONBIN_KEY = '$2a$10$HRS5Cfuy.Turiaz2cQ/yS.65lGCe8RwbGtl39dQdXC8zY9JhTb5B.';
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+
 let data = [], editingId = null, deletingId = null, selectedId = null, searchTerm = '';
 let activeTab = 'condutas', selectedScoreId = null, scoreValues = {};
 
-function load() {
+async function load() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    data = raw ? JSON.parse(raw) : sampleData();
+    const res = await fetch(JSONBIN_URL + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN_KEY }
+    });
+    if (!res.ok) throw new Error();
+    const json = await res.json();
+    data = json.record?.condutas || [];
+    if (data.length === 0) data = sampleData();
     data.forEach(d => {
       if (!d.anamnese) d.anamnese = '';
-      if (!d.exames) d.exames = '';
-      if (!d.alergia) d.alergia = '';
-      if (!d.tag) d.tag = '';
+      if (!d.exames)   d.exames   = '';
+      if (!d.alergia)  d.alergia  = '';
+      if (!d.tag)      d.tag      = '';
     });
-  } catch { data = sampleData(); }
+  } catch {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      data = raw ? JSON.parse(raw) : sampleData();
+      data.forEach(d => {
+        if (!d.anamnese) d.anamnese = '';
+        if (!d.exames)   d.exames   = '';
+        if (!d.alergia)  d.alergia  = '';
+        if (!d.tag)      d.tag      = '';
+      });
+    } catch { data = sampleData(); }
+  }
 }
 
-function persist() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+async function persist() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  try {
+    await fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+      body: JSON.stringify({ condutas: data })
+    });
+  } catch { /* offline — localStorage já salvou */ }
+}
 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 
@@ -1971,10 +2000,11 @@ document.addEventListener('keydown', e => {
 });
 
 // ─── INIT ────────────────────────────────────────────────────
-load();
-render();
-renderScoreList();
-if (data.length > 0) setTimeout(() => selectItem(sorted(data)[0].id), 50);
+load().then(() => {
+  render();
+  renderScoreList();
+  if (data.length > 0) setTimeout(() => selectItem(sorted(data)[0].id), 50);
+});
 </script>
 </body>
 </html>
