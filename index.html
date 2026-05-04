@@ -191,11 +191,11 @@
   /* Empty */
   #view-empty {
     flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 10px; padding: 40px; color: var(--text-muted);
+    align-items: flex-start; justify-content: flex-start;
+    padding: 20px 28px;
   }
-  #view-empty svg { width: 34px; height: 34px; stroke: var(--border); fill: none; stroke-width: 1.5; }
-  #view-empty p { font-size: 13px; }
+  #view-empty svg { display: none; }
+  #view-empty p { font-size: 11px; color: var(--border); font-family: var(--mono); }
 
   /* Conduta header */
   .detail-header {
@@ -438,10 +438,11 @@
 
   /* ─── TAGS ─── */
   .tag-filter-bar {
-    display: flex; flex-wrap: wrap; gap: 4px;
-    padding: 8px 12px; border-bottom: 1px solid var(--border-light);
-    flex-shrink: 0;
+    display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 4px;
+    padding: 6px 12px; border-bottom: 1px solid var(--border-light);
+    flex-shrink: 0; scrollbar-width: none;
   }
+  .tag-filter-bar::-webkit-scrollbar { display: none; }
   .tag-filter-btn {
     padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 600;
     font-family: var(--mono); letter-spacing: 0.04em; cursor: pointer;
@@ -630,9 +631,9 @@
   <div class="detail">
 
     <!-- Empty -->
-    <div class="detail-view visible" id="view-empty">
-      <svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M9 8h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
-      <p>Selecione uma conduta ou escore</p>
+    <div class="detail-view visible" id="view-empty" style="display:none">
+      <svg viewBox="0 0 24 24" id="empty-icon"><path d="M9 12h6M9 16h6M9 8h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
+      <p id="empty-text">Selecione uma conduta ou escore</p>
     </div>
 
     <!-- Conduta detail -->
@@ -1589,6 +1590,7 @@ function jumpToLetter(l) {
 function showView(which) {
   ['view-empty','view-conduta','view-score'].forEach(id => {
     const el = document.getElementById(id);
+    el.style.display = '';
     el.classList.toggle('visible', id === 'view-' + which);
   });
 }
@@ -2003,7 +2005,12 @@ document.addEventListener('keydown', e => {
 load().then(() => {
   render();
   renderScoreList();
-  if (data.length > 0) setTimeout(() => selectItem(sorted(data)[0].id), 50);
+  if (data.length > 0) {
+    selectItem(sorted(data)[0].id);
+  } else {
+    document.getElementById('view-empty').style.display = '';
+    document.getElementById('view-empty').classList.add('visible');
+  }
 });
 </script>
 </body>
