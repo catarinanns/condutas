@@ -191,16 +191,17 @@
   /* Empty */
   #view-empty {
     flex: 1; display: flex; flex-direction: column;
-    align-items: flex-start; justify-content: flex-start;
+    align-items: center; justify-content: flex-start;
     padding: 0;
   }
   #view-empty svg { display: none; }
   #view-empty p { 
-    font-size: 11px; color: var(--text-muted); 
-    font-family: var(--mono);
-    padding: 8px 28px;
+    font-size: 13px; color: var(--text-secondary);
+    font-family: var(--mono); font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 16px 28px;
     border-bottom: 1px solid var(--border-light);
-    width: 100%;
+    width: 100%; text-align: center;
     background: var(--surface);
   }
 
@@ -445,9 +446,10 @@
 
   /* ─── TAGS ─── */
   .tag-filter-bar {
-    display: flex; flex-wrap: nowrap; overflow-x: scroll; gap: 4px;
+    display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 4px;
     padding: 6px 12px; border-bottom: 1px solid var(--border-light);
     flex-shrink: 0; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    max-width: 100%;
   }
   .tag-filter-bar::-webkit-scrollbar { display: none; }
   .tag-filter-btn {
@@ -1979,6 +1981,26 @@ window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredInstallPrompt = e;
 });
+
+// ─── TAG BAR DRAG SCROLL ─────────────────────────────────────
+(function() {
+  let isDown = false, startX, scrollLeft;
+  document.addEventListener('DOMContentLoaded', () => {});
+  function initDrag() {
+    const bar = document.getElementById('tag-filter-bar');
+    if (!bar) return;
+    bar.addEventListener('mousedown', e => {
+      isDown = true; startX = e.pageX - bar.offsetLeft; scrollLeft = bar.scrollLeft;
+    });
+    bar.addEventListener('mouseleave', () => isDown = false);
+    bar.addEventListener('mouseup', () => isDown = false);
+    bar.addEventListener('mousemove', e => {
+      if (!isDown) return; e.preventDefault();
+      bar.scrollLeft = scrollLeft - (e.pageX - bar.offsetLeft - startX);
+    });
+  }
+  setTimeout(initDrag, 500);
+})();
 
 // ─── TOAST ───────────────────────────────────────────────────
 let toastTimer;
