@@ -192,10 +192,17 @@
   #view-empty {
     flex: 1; display: flex; flex-direction: column;
     align-items: flex-start; justify-content: flex-start;
-    padding: 20px 28px;
+    padding: 0;
   }
   #view-empty svg { display: none; }
-  #view-empty p { font-size: 11px; color: var(--border); font-family: var(--mono); }
+  #view-empty p { 
+    font-size: 11px; color: var(--text-muted); 
+    font-family: var(--mono);
+    padding: 8px 28px;
+    border-bottom: 1px solid var(--border-light);
+    width: 100%;
+    background: var(--surface);
+  }
 
   /* Conduta header */
   .detail-header {
@@ -438,16 +445,16 @@
 
   /* ─── TAGS ─── */
   .tag-filter-bar {
-    display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 4px;
+    display: flex; flex-wrap: nowrap; overflow-x: scroll; gap: 4px;
     padding: 6px 12px; border-bottom: 1px solid var(--border-light);
-    flex-shrink: 0; scrollbar-width: none;
+    flex-shrink: 0; scrollbar-width: none; -webkit-overflow-scrolling: touch;
   }
   .tag-filter-bar::-webkit-scrollbar { display: none; }
   .tag-filter-btn {
     padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 600;
     font-family: var(--mono); letter-spacing: 0.04em; cursor: pointer;
     border: 1px solid var(--border); background: none; color: var(--text-muted);
-    transition: all 0.12s; white-space: nowrap;
+    transition: all 0.12s; white-space: nowrap; flex-shrink: 0;
   }
   .tag-filter-btn:hover { border-color: var(--text-muted); color: var(--text-secondary); }
   .tag-filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
