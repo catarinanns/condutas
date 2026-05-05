@@ -2313,6 +2313,41 @@ document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); if (activeTab === 'condutas') openModal(); }
 });
 
+// ─── EXPOSE TO WINDOW (needed for type=module onclick handlers) ───
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.save = save;
+window.selectItem = selectItem;
+window.openEdit = openEdit;
+window.openEditSelected = openEditSelected;
+window.askDelete = askDelete;
+window.askDeleteSelected = askDeleteSelected;
+window.confirmDelete = confirmDelete;
+window.closeConfirm = closeConfirm;
+window.confirmOverlayClose = confirmOverlayClose;
+window.overlayClose = overlayClose;
+window.handleSearch = handleSearch;
+window.clearSearch = clearSearch;
+window.jumpToLetter = jumpToLetter;
+window.switchTab = switchTab;
+window.selectScore = selectScore;
+window.resetScore = resetScore;
+window.copySection = copySection;
+window.exportData = exportData;
+window.importData = importData;
+window.exportTxt = exportTxt;
+window.exportPrint = exportPrint;
+window.toggleExportMenu = toggleExportMenu;
+window.toggleNotes = toggleNotes;
+window.saveNotes = saveNotes;
+window.clearNotes = clearNotes;
+window.notesOverlayClose = notesOverlayClose;
+window.openTemplatePicker = openTemplatePicker;
+window.closeTemplatePicker = closeTemplatePicker;
+window.templateOverlayClose = templateOverlayClose;
+window.applyTemplate = applyTemplate;
+window.setTagFilter = setTagFilter;
+
 // ─── INIT ────────────────────────────────────────────────────
 load().then(() => {
   render();
