@@ -1210,6 +1210,269 @@ const SCORES = [
     },
     noNumber: true
   }
+  ,
+  {
+    id: 'qsofa',
+    name: 'qSOFA',
+    subtitle: 'Triagem rápida de sepse fora da UTI',
+    sections: [{
+      fields: [
+        { id: 'fr22', label: 'Frequência respiratória ≥ 22 irpm', type: 'check', pts: '+1' },
+        { id: 'glasgow', label: 'Alteração do nível de consciência (Glasgow < 15)', type: 'check', pts: '+1' },
+        { id: 'pas100', label: 'Pressão arterial sistólica ≤ 100 mmHg', type: 'check', pts: '+1' },
+      ]
+    }],
+    calc: v => ['fr22','glasgow','pas100'].filter(k => v[k]).length,
+    interpret: s => {
+      if (s === 0) return { label: `${s} — Baixo risco`, color: 'green', rec: 'Sem critérios de alerta para sepse. Monitorar e reavaliar se piora clínica.' };
+      if (s === 1) return { label: `${s} — Atenção`, color: 'yellow', rec: '1 critério presente. Avaliar contexto clínico. Reavaliar em breve.' };
+      return { label: `${s} — Alto risco de sepse`, color: 'red', rec: 'qSOFA ≥ 2 associado a maior mortalidade. Investigar foco infeccioso. Lactato, hemoculturas, acesso venoso, hidratação. Considerar SOFA completo e critérios de sepse.' };
+    }
+  },
+  {
+    id: 'news2',
+    name: 'NEWS2',
+    subtitle: 'Deterioração clínica — alerta precoce',
+    sections: [
+      {
+        title: 'Frequência respiratória (irpm)',
+        fields: [{ id: 'fr', type: 'radio', options: [
+          { value: '3', label: '≤ 8', pts: '+3' },
+          { value: '1', label: '9 – 11', pts: '+1' },
+          { value: '0', label: '12 – 20', pts: '0' },
+          { value: '2', label: '21 – 24', pts: '+2' },
+          { value: '3b', label: '≥ 25', pts: '+3' },
+        ]}]
+      },
+      {
+        title: 'SpO2 — Escala 1 (sem hipercapnia)',
+        fields: [{ id: 'spo2', type: 'radio', options: [
+          { value: '3', label: '≤ 91%', pts: '+3' },
+          { value: '2', label: '92 – 93%', pts: '+2' },
+          { value: '1', label: '94 – 95%', pts: '+1' },
+          { value: '0', label: '≥ 96%', pts: '0' },
+        ]}]
+      },
+      {
+        fields: [
+          { id: 'o2', label: 'Em uso de oxigênio suplementar', type: 'check', pts: '+2' },
+        ]
+      },
+      {
+        title: 'Pressão arterial sistólica (mmHg)',
+        fields: [{ id: 'pas', type: 'radio', options: [
+          { value: '3', label: '≤ 90', pts: '+3' },
+          { value: '2', label: '91 – 100', pts: '+2' },
+          { value: '1', label: '101 – 110', pts: '+1' },
+          { value: '0', label: '111 – 219', pts: '0' },
+          { value: '3b', label: '≥ 220', pts: '+3' },
+        ]}]
+      },
+      {
+        title: 'Frequência cardíaca (bpm)',
+        fields: [{ id: 'fc', type: 'radio', options: [
+          { value: '3', label: '≤ 40', pts: '+3' },
+          { value: '1', label: '41 – 50', pts: '+1' },
+          { value: '0', label: '51 – 90', pts: '0' },
+          { value: '1b', label: '91 – 110', pts: '+1' },
+          { value: '2', label: '111 – 130', pts: '+2' },
+          { value: '3b', label: '≥ 131', pts: '+3' },
+        ]}]
+      },
+      {
+        title: 'Nível de consciência',
+        fields: [{ id: 'consciencia', type: 'radio', options: [
+          { value: '0', label: 'Alerta (A)', pts: '0' },
+          { value: '3', label: 'Confuso / voz / dor / sem resposta (C/V/D/S)', pts: '+3' },
+        ]}]
+      },
+      {
+        title: 'Temperatura (°C)',
+        fields: [{ id: 'temp', type: 'radio', options: [
+          { value: '3', label: '≤ 35,0', pts: '+3' },
+          { value: '1', label: '35,1 – 36,0', pts: '+1' },
+          { value: '0', label: '36,1 – 38,0', pts: '0' },
+          { value: '1b', label: '38,1 – 39,0', pts: '+1' },
+          { value: '2', label: '≥ 39,1', pts: '+2' },
+        ]}]
+      },
+    ],
+    calc: v => {
+      const parse = val => val ? parseInt(val.replace('b','')) : 0;
+      return parse(v.fr) + parse(v.spo2) + (v.o2?2:0) + parse(v.pas) + parse(v.fc) + parse(v.consciencia) + parse(v.temp);
+    },
+    interpret: s => {
+      if (s <= 4) return { label: `${s} — Baixo risco`, color: 'green', rec: 'Monitorização de rotina. Reavaliar conforme protocolo.' };
+      if (s <= 6) return { label: `${s} — Risco moderado`, color: 'yellow', rec: 'Aumentar frequência de monitorização. Avaliar necessidade de cuidados intensivos.' };
+      return { label: `${s} — Alto risco`, color: 'red', rec: 'Deterioração clínica grave. Acionar equipe médica imediatamente. Avaliar UTI.' };
+    }
+  },
+  {
+    id: 'heart',
+    name: 'HEART Score',
+    subtitle: 'Dor torácica — risco de evento cardiovascular maior em 6 semanas',
+    sections: [
+      {
+        title: 'História',
+        fields: [{ id: 'historia', type: 'radio', options: [
+          { value: '2', label: 'Altamente suspeita (irradiação, diaforese, resposta a nitrato)', pts: '+2' },
+          { value: '1', label: 'Moderadamente suspeita', pts: '+1' },
+          { value: '0', label: 'Pouco suspeita', pts: '0' },
+        ]}]
+      },
+      {
+        title: 'ECG',
+        fields: [{ id: 'ecg', type: 'radio', options: [
+          { value: '2', label: 'Depressão significativa de ST ou BRE novo', pts: '+2' },
+          { value: '1', label: 'Alteração inespecífica (BRE antigo, repolarização precoce, HVE)', pts: '+1' },
+          { value: '0', label: 'Normal', pts: '0' },
+        ]}]
+      },
+      {
+        title: 'Idade',
+        fields: [{ id: 'idade', type: 'radio', options: [
+          { value: '2', label: '≥ 65 anos', pts: '+2' },
+          { value: '1', label: '45 – 64 anos', pts: '+1' },
+          { value: '0', label: '< 45 anos', pts: '0' },
+        ]}]
+      },
+      {
+        title: 'Fatores de risco (HAS, DM, tabagismo, dislipidemia, obesidade, HF, DAC prévia)',
+        fields: [{ id: 'frcv', type: 'radio', options: [
+          { value: '2', label: '≥ 3 fatores ou história de DAC', pts: '+2' },
+          { value: '1', label: '1 – 2 fatores', pts: '+1' },
+          { value: '0', label: 'Nenhum fator conhecido', pts: '0' },
+        ]}]
+      },
+      {
+        title: 'Troponina',
+        fields: [{ id: 'troponina', type: 'radio', options: [
+          { value: '2', label: '> 3x o limite superior da normalidade', pts: '+2' },
+          { value: '1', label: '1 – 3x o limite superior da normalidade', pts: '+1' },
+          { value: '0', label: 'Normal', pts: '0' },
+        ]}]
+      },
+    ],
+    calc: v => (parseInt(v.historia)||0)+(parseInt(v.ecg)||0)+(parseInt(v.idade)||0)+(parseInt(v.frcv)||0)+(parseInt(v.troponina)||0),
+    interpret: s => {
+      if (s <= 3) return { label: `${s} — Baixo risco (1,7%)`, color: 'green', rec: 'Risco de MACE em 6 semanas ~1,7%. Alta precoce com segurança. Acompanhamento ambulatorial.' };
+      if (s <= 6) return { label: `${s} — Risco intermediário (12%)`, color: 'yellow', rec: 'Risco ~12%. Internação para observação, monitorização e troponina seriada.' };
+      return { label: `${s} — Alto risco (65%)`, color: 'red', rec: 'Risco ~65%. Internação imediata. Acionar cardiologia. Considerar cateterismo precoce.' };
+    }
+  }
+  ,
+  {
+    id: 'canadian_syncope',
+    name: 'Canadian Syncope Risk Score',
+    subtitle: 'Risco de evento adverso grave em 30 dias após síncope',
+    sections: [
+      {
+        title: 'Fatores protetores (reduzem pontuação)',
+        fields: [
+          { id: 'vasovagal', label: 'Predisposição a síncope vasovagal (posição prolongada, local quente, medo, dor, procedimento médico)', type: 'check', pts: '−1' },
+          { id: 'diag_vasovagal', label: 'Diagnóstico final de síncope vasovagal no PA', type: 'check', pts: '−2' },
+        ]
+      },
+      {
+        title: 'Fatores de risco (aumentam pontuação)',
+        fields: [
+          { id: 'cardiopatia', label: 'História de cardiopatia', type: 'check', pts: '+1' },
+          { id: 'pas', label: 'PA sistólica na triagem < 90 ou > 180 mmHg', type: 'check', pts: '+2' },
+          { id: 'troponina', label: 'Troponina elevada (> percentil 99)', type: 'check', pts: '+2' },
+          { id: 'eixo_qrs', label: 'Eixo QRS anormal (< -30° ou > 100°)', type: 'check', pts: '+1' },
+          { id: 'qrs_largo', label: 'Duração do QRS > 130 ms', type: 'check', pts: '+1' },
+          { id: 'qtc', label: 'QTc > 480 ms', type: 'check', pts: '+2' },
+          { id: 'diag_cardiaca', label: 'Diagnóstico final de síncope cardíaca no PA', type: 'check', pts: '+2' },
+        ]
+      }
+    ],
+    calc: v => {
+      let s = 0;
+      if (v.vasovagal) s -= 1;
+      if (v.diag_vasovagal) s -= 2;
+      if (v.cardiopatia) s += 1;
+      if (v.pas) s += 2;
+      if (v.troponina) s += 2;
+      if (v.eixo_qrs) s += 1;
+      if (v.qrs_largo) s += 1;
+      if (v.qtc) s += 2;
+      if (v.diag_cardiaca) s += 2;
+      return s;
+    },
+    interpret: s => {
+      if (s <= -2) return { label: `${s} — Risco muito baixo (0,4%)`, color: 'green', rec: 'Alta com segurança. Orientar sobre recorrência e retorno se novos episódios.' };
+      if (s <= 0)  return { label: `${s} — Risco baixo (1%)`, color: 'green', rec: 'Alta com investigação ambulatorial em breve. ECG e holter se indicado.' };
+      if (s <= 3)  return { label: `${s} — Risco moderado (6%)`, color: 'yellow', rec: 'Observação no PA por 6-12h. Monitorização cardíaca. Ecocardiograma se disponível.' };
+      if (s <= 5)  return { label: `${s} — Risco alto (15%)`, color: 'red', rec: 'Internação indicada. Monitorização contínua. Avaliação cardiológica.' };
+      return { label: `${s} — Risco muito alto (36%)`, color: 'red', rec: 'Internação urgente. Avaliação cardiológica imediata. Considerar UTI.' };
+    }
+  },
+  {
+    id: 'red_flags_lombar',
+    name: 'Red Flags — Dor Lombar',
+    subtitle: 'Sinais de alarme para causa grave de dor lombar',
+    sections: [
+      {
+        title: 'Sinais de alarme — marque os presentes',
+        fields: [
+          { id: 'cancer', label: 'História prévia de câncer', type: 'check', pts: '' },
+          { id: 'perda_peso', label: 'Perda de peso inexplicada', type: 'check', pts: '' },
+          { id: 'febre', label: 'Febre sem causa aparente', type: 'check', pts: '' },
+          { id: 'noturna', label: 'Dor noturna intensa ou em repouso total', type: 'check', pts: '' },
+          { id: 'trauma', label: 'Trauma recente significativo', type: 'check', pts: '' },
+          { id: 'imuno', label: 'Imunossupressão (HIV, corticoides crônicos, transplante)', type: 'check', pts: '' },
+          { id: 'drogas_iv', label: 'Uso de drogas intravenosas', type: 'check', pts: '' },
+          { id: 'esfincters', label: 'Disfunção de esfíncteres (retenção ou incontinência urinária/fecal)', type: 'check', pts: '' },
+          { id: 'sela', label: 'Anestesia em sela (dormência perineal/genital)', type: 'check', pts: '' },
+          { id: 'deficit', label: 'Déficit neurológico progressivo em membros inferiores', type: 'check', pts: '' },
+          { id: 'idade', label: 'Idade < 20 ou > 50 anos com dor lombar nova', type: 'check', pts: '' },
+          { id: 'sem_melhora', label: 'Sem melhora após 6 semanas de tratamento adequado', type: 'check', pts: '' },
+        ]
+      }
+    ],
+    calc: v => ['cancer','perda_peso','febre','noturna','trauma','imuno','drogas_iv','esfincters','sela','deficit','idade','sem_melhora'].filter(k => v[k]).length,
+    interpret: (s, v) => {
+      const critico = v.esfincters || v.sela || v.deficit;
+      if (s === 0) return { label: 'Sem red flags', color: 'green', rec: 'Dor lombar inespecífica. Tratamento conservador: analgesia, mobilização precoce, evitar repouso prolongado.' };
+      if (critico) return { label: 'Red flag crítica presente', color: 'red', rec: 'Sinais de síndrome da cauda equina ou déficit neurológico progressivo. Ressonância magnética de emergência. Avaliação neurocirúrgica urgente.' };
+      return { label: `${s} red flag${s>1?'s':''} presente${s>1?'s':''}`, color: 'yellow', rec: 'Investigar causa secundária. Considerar Rx, hemograma, VHS/PCR, PSA (homens > 50 anos). Encaminhar para investigação se sem melhora.' };
+    },
+    noNumber: true
+  },
+  {
+    id: 'red_flags_tce',
+    name: 'Red Flags — Trauma Cranioencefálico',
+    subtitle: 'Sinais de alarme no TCE — indicação de TC e internação',
+    sections: [
+      {
+        title: 'Sinais de alarme — marque os presentes',
+        fields: [
+          { id: 'glasgow', label: 'Glasgow < 15 em qualquer momento após o trauma', type: 'check', pts: '' },
+          { id: 'consciencia', label: 'Perda de consciência (qualquer duração)', type: 'check', pts: '' },
+          { id: 'amnesia', label: 'Amnésia pós-traumática', type: 'check', pts: '' },
+          { id: 'cefaleia', label: 'Cefaleia progressiva ou intensa', type: 'check', pts: '' },
+          { id: 'vomitos', label: '2 ou mais episódios de vômito', type: 'check', pts: '' },
+          { id: 'convulsao', label: 'Convulsão pós-traumática', type: 'check', pts: '' },
+          { id: 'focal', label: 'Déficit neurológico focal (fraqueza, alteração de fala, visão)', type: 'check', pts: '' },
+          { id: 'fratura', label: 'Suspeita de fratura de crânio (deformidade, hematoma, crepitação)', type: 'check', pts: '' },
+          { id: 'base', label: 'Sinais de fratura de base (Battle, olhos de guaxinim, hemotímpano, rinorreia/otorreia)', type: 'check', pts: '' },
+          { id: 'anticoag', label: 'Em uso de anticoagulante ou antiagregante', type: 'check', pts: '' },
+          { id: 'idade65', label: 'Idade ≥ 65 anos', type: 'check', pts: '' },
+          { id: 'mecanismo', label: 'Mecanismo de alto impacto (queda > 1m, ejeção, atropelamento)', type: 'check', pts: '' },
+        ]
+      }
+    ],
+    calc: v => ['glasgow','consciencia','amnesia','cefaleia','vomitos','convulsao','focal','fratura','base','anticoag','idade65','mecanismo'].filter(k => v[k]).length,
+    interpret: (s, v) => {
+      const tc_urgente = v.glasgow || v.convulsao || v.focal || v.fratura || v.base;
+      const tc_indicada = v.vomitos || v.anticoag || v.idade65 || v.cefaleia;
+      if (s === 0) return { label: 'Sem red flags', color: 'green', rec: 'TCE leve sem sinais de alarme. Observação clínica por 4-6h. Alta com orientações escritas de retorno.' };
+      if (tc_urgente) return { label: 'TC urgente', color: 'red', rec: 'Red flag de alto risco presente. TC de crânio imediata. Internação para observação.' };
+      if (tc_indicada) return { label: `${s} red flag${s>1?'s':''} — TC indicada`, color: 'yellow', rec: 'Solicitar TC de crânio. Observação no PA. Alta somente após TC normal e período de observação.' };
+      return { label: `${s} red flag${s>1?'s':''} — observar`, color: 'yellow', rec: 'Observação clínica por 4-6h. TC a critério clínico. Alta com acompanhante e orientações de retorno.' };
+    },
+    noNumber: true
+  }
 ];
 const ANAMNESE_TEMPLATES = [
   {
@@ -1571,7 +1834,8 @@ function render() {
 // ─── RENDER SCORE LIST ───────────────────────────────────────
 function renderScoreList() {
   const el = document.getElementById('score-list');
-  el.innerHTML = SCORES.map(s => `
+  const sorted = [...SCORES].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+  el.innerHTML = sorted.map(s => `
     <div class="score-list-item ${s.id === selectedScoreId ? 'active' : ''}" id="sli-${s.id}" onclick="selectScore('${s.id}')">
       <div class="score-list-name">${s.name}</div>
       <div class="score-list-sub">${s.subtitle}</div>
