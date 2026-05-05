@@ -852,7 +852,7 @@ EXAME FÍSICO:
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script type="module">
 // ─── SCORES DEFINITIONS ──────────────────────────────────────
 const SCORES = [
   {
@@ -1680,21 +1680,41 @@ LINFONODOS REGIONAIS: ___.`
 
 // ─── DATA ────────────────────────────────────────────────────
 const STORAGE_KEY = 'condutas_v1';
-const JSONBIN_ID  = '69f86f61aaba8821976c20b7';
-const JSONBIN_KEY = '$2a$10$HRS5Cfuy.Turiaz2cQ/yS.65lGCe8RwbGtl39dQdXC8zY9JhTb5B.';
-const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
 
 let data = [], editingId = null, deletingId = null, selectedId = null, searchTerm = '';
 let activeTab = 'condutas', selectedScoreId = null, scoreValues = {};
+let db = null;
+
+async function initFirebase() {
+  try {
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js');
+    const { getFirestore, doc, getDoc, setDoc } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js');
+    const app = initializeApp({
+      apiKey: "AIzaSyAv_v2o5hw1uKYgOPTAmXa1W2XEOCaQjd4",
+      authDomain: "condutas-plantao.firebaseapp.com",
+      projectId: "condutas-plantao",
+      storageBucket: "condutas-plantao.firebasestorage.app",
+      messagingSenderId: "437495341973",
+      appId: "1:437495341973:web:b9790371b2aa5859444c9c"
+    });
+    db = getFirestore(app);
+    return { db, doc, getDoc, setDoc };
+  } catch(e) {
+    return null;
+  }
+}
 
 async function load() {
   try {
-    const res = await fetch(JSONBIN_URL + '/latest', {
-      headers: { 'X-Master-Key': JSONBIN_KEY }
-    });
-    if (!res.ok) throw new Error();
-    const json = await res.json();
-    data = json.record?.condutas || [];
+    const fb = await initFirebase();
+    if (!fb) throw new Error('Firebase not available');
+    const { db, doc, getDoc } = fb;
+    const snap = await getDoc(doc(db, 'condutas', 'all'));
+    if (snap.exists()) {
+      data = snap.data().list || [];
+    } else {
+      data = [];
+    }
     if (data.length === 0) data = sampleData();
     data.forEach(d => {
       if (!d.anamnese) d.anamnese = '';
@@ -1719,11 +1739,10 @@ async function load() {
 async function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   try {
-    await fetch(JSONBIN_URL, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
-      body: JSON.stringify({ condutas: data })
-    });
+    const fb = await initFirebase();
+    if (!fb) throw new Error();
+    const { db, doc, setDoc } = fb;
+    await setDoc(doc(db, 'condutas', 'all'), { list: data });
   } catch { /* offline — localStorage já salvou */ }
 }
 
