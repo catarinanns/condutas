@@ -2000,6 +2000,7 @@ const SCORES = [
     }
   }
 ];
+const ANAMNESE_TEMPLATES = [
   {
     name: 'Faringoamigdalite / Odinofagia',
     text: `QP: DOR DE GARGANTA HÁ ___ DIAS.
@@ -2551,7 +2552,6 @@ function recalculate(score) {
 
   const s = score.calc(v);
   const result = score.interpret(s, v);
-
   const el = document.getElementById('score-result');
 
   if (!result) {
@@ -2560,10 +2560,27 @@ function recalculate(score) {
     return;
   }
 
+  // Gasometria — multi-step display
+  if (result.isGaso) {
+    el.className = 'score-result';
+    el.style.background = 'none';
+    el.style.border = 'none';
+    el.style.padding = '0';
+    el.innerHTML = `<div class="gaso-steps">${result.steps.map(step => `
+      <div class="gaso-step ${step.color}">
+        <div class="gaso-step-label">${step.label}</div>
+        <div class="gaso-step-value">${step.value}</div>
+      </div>`).join('')}</div>`;
+    return;
+  }
+
   el.className = `score-result ${result.color}`;
+  el.style.background = '';
+  el.style.border = '';
+  el.style.padding = '';
   el.innerHTML = `
     <div class="score-result-top">
-      ${(!score.noNumber && s !== null) ? `<div class="score-number">${s}</div>` : ''}
+      ${(!score.noNumber && s !== null && !score.isGaso) ? `<div class="score-number">${s}</div>` : ''}
       <div class="score-result-label">${result.label}</div>
     </div>
     <div class="score-result-rec">${result.rec}</div>`;
@@ -2623,7 +2640,7 @@ function clearSearch() { document.getElementById('search').value = ''; handleSea
 function openModal() {
   editingId = null;
   document.getElementById('modal-title').textContent = 'Nova conduta';
-  ['field-name','field-anamnese','field-exames','field-body','field-alergia'].forEach(id => document.getElementById(id).value = '');
+  ['field-name','field-anamnese','field-exames','field-body','field-prontuario','field-orientacoes','field-alergia'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('field-tag').value = '';
   document.getElementById('modal-overlay').classList.add('active');
   setTimeout(() => document.getElementById('field-name').focus(), 80);
@@ -2639,6 +2656,8 @@ function openEdit(id) {
   document.getElementById('field-anamnese').value = item.anamnese || '';
   document.getElementById('field-exames').value = item.exames || '';
   document.getElementById('field-body').value = item.body;
+  document.getElementById('field-prontuario').value = item.prontuario || '';
+  document.getElementById('field-orientacoes').value = item.orientacoes || '';
   document.getElementById('field-alergia').value = item.alergia || '';
   document.getElementById('modal-overlay').classList.add('active');
   setTimeout(() => document.getElementById('field-name').focus(), 80);
