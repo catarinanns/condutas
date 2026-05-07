@@ -555,6 +555,193 @@
     .section-label { background: #f5f5f5; }
   }
 
+
+  /* ─── CALC / REF ─── */
+  .score-category-header {
+    font-size: 9px; font-weight: 700; font-family: var(--mono);
+    letter-spacing: 0.14em; color: var(--text-muted); padding: 14px 10px 4px;
+    text-transform: uppercase;
+  }
+  .score-category-header:first-child { padding-top: 8px; }
+
+  .calc-field-wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px; gap: 12px; border-radius: 6px; transition: background 0.1s;
+  }
+  .calc-field-wrap:hover { background: var(--bg); }
+  .calc-field-label { font-size: 12.5px; color: var(--text-primary); flex: 1; line-height: 1.3; }
+  .calc-input-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .calc-input {
+    width: 80px; height: 34px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0 8px; font-family: var(--mono); font-size: 13px;
+    color: var(--text-primary); outline: none; text-align: right;
+    transition: border-color 0.15s;
+  }
+  .calc-input:focus { border-color: var(--accent); background: var(--surface); }
+  .calc-unit { font-size: 11px; color: var(--text-muted); font-family: var(--mono); min-width: 36px; }
+
+  .ref-search {
+    width: 100%; height: 34px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0 12px; font-family: var(--sans); font-size: 13px;
+    color: var(--text-primary); outline: none; transition: border-color 0.15s;
+  }
+  .ref-search:focus { border-color: var(--accent); }
+
+  .ref-card {
+    padding: 12px 14px; border-bottom: 1px solid var(--border-light);
+    transition: background 0.1s;
+  }
+  .ref-card:last-child { border-bottom: none; }
+  .ref-card:hover { background: var(--bg); }
+  .ref-agente { font-size: 12px; font-weight: 700; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 2px; }
+  .ref-antidoto { font-size: 12px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+  .ref-dose { font-size: 11.5px; font-family: var(--mono); color: var(--text-secondary); line-height: 1.6; margin-bottom: 3px; }
+  .ref-obs { font-size: 11px; color: var(--text-muted); font-style: italic; line-height: 1.4; }
+  .ref-ref { font-size: 10px; color: var(--text-muted); font-family: var(--mono); padding: 8px 14px; border-top: 1px solid var(--border-light); }
+
+
+  /* ─── PLANTÃO ─── */
+  .plantao-header {
+    padding: 12px 12px 8px; flex-shrink: 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .plantao-header-row {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+  }
+  .plantao-title { font-size: 11px; font-weight: 700; font-family: var(--mono); color: var(--text-secondary); letter-spacing: 0.08em; }
+  .btn-new-shift {
+    display: flex; align-items: center; gap: 4px;
+    background: none; border: 1px dashed var(--accent); border-radius: 5px;
+    padding: 3px 9px; font-size: 10px; font-weight: 600; font-family: var(--mono);
+    color: var(--accent); cursor: pointer; transition: background 0.15s; letter-spacing: 0.04em;
+  }
+  .btn-new-shift:hover { background: var(--accent-light); }
+
+  .shift-list { display: flex; flex-direction: column; gap: 2px; }
+  .shift-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 8px; border-radius: 6px; cursor: pointer; transition: background 0.12s;
+  }
+  .shift-item:hover { background: var(--bg); }
+  .shift-item.active { background: var(--accent-light); }
+  .shift-item-left { flex: 1; min-width: 0; }
+  .shift-date { font-size: 11px; font-weight: 600; color: var(--text-primary); font-family: var(--mono); }
+  .shift-item.active .shift-date { color: var(--accent); }
+  .shift-time { font-size: 10px; color: var(--text-muted); font-family: var(--mono); }
+  .shift-count {
+    font-size: 10px; font-family: var(--mono); font-weight: 600;
+    background: var(--border-light); color: var(--text-muted);
+    border-radius: 10px; padding: 1px 7px; flex-shrink: 0;
+  }
+  .shift-item.active .shift-count { background: var(--accent); color: white; }
+
+  /* Timeline */
+  .timeline-view { flex: 1; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; }
+  .timeline-view::-webkit-scrollbar { width: 5px; }
+  .timeline-view::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .timeline-header {
+    padding: 18px 28px 14px; background: var(--surface);
+    border-bottom: 1px solid var(--border); display: flex;
+    align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  .timeline-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .timeline-subtitle { font-size: 11px; color: var(--text-muted); font-family: var(--mono); margin-top: 2px; }
+  .btn-add-entry {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--accent); color: white; border: none;
+    border-radius: var(--radius); padding: 6px 12px;
+    font-size: 12px; font-weight: 500; font-family: var(--sans);
+    cursor: pointer; transition: background 0.15s; white-space: nowrap;
+  }
+  .btn-add-entry:hover { background: var(--accent-hover); }
+  .btn-add-entry svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+  .timeline-body { flex: 1; padding: 24px 28px 48px; }
+
+  .timeline-empty {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 60px 20px; gap: 8px;
+  }
+  .timeline-empty p { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.6; }
+
+  .timeline-list { display: flex; flex-direction: column; gap: 0; }
+
+  .timeline-entry { display: flex; gap: 16px; position: relative; }
+  .timeline-entry:not(:last-child)::before {
+    content: ''; position: absolute; left: 47px; top: 28px;
+    width: 1px; height: calc(100% + 0px); background: var(--border);
+  }
+
+  .timeline-time {
+    width: 44px; flex-shrink: 0; text-align: right;
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    color: var(--text-muted); padding-top: 6px; line-height: 1;
+  }
+
+  .timeline-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    margin-top: 8px; border: 2px solid var(--surface);
+    position: relative; z-index: 1;
+  }
+
+  .timeline-card {
+    flex: 1; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px 14px; margin-bottom: 12px;
+    box-shadow: var(--shadow); cursor: pointer; transition: border-color 0.15s;
+  }
+  .timeline-card:hover { border-color: #CCC; }
+
+  .timeline-card-top {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px;
+  }
+  .timeline-leito { font-size: 12px; font-weight: 700; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.02em; }
+  .timeline-status-badge {
+    font-size: 9px; font-weight: 700; font-family: var(--mono); letter-spacing: 0.06em;
+    padding: 2px 7px; border-radius: 10px; white-space: nowrap; flex-shrink: 0;
+  }
+  .status-observacao { background: #FEF3C7; color: #92400E; }
+  .status-aguardando { background: #DBEAFE; color: #1E40AF; }
+  .status-alta { background: var(--accent-light); color: var(--accent); }
+  .status-internado { background: var(--purple-light); color: var(--purple); }
+  .status-transferido { background: var(--border-light); color: var(--text-muted); }
+  .status-obito { background: #1A1916; color: white; }
+
+  .timeline-field { font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 2px; }
+  .timeline-field strong { color: var(--text-primary); font-weight: 600; }
+  .timeline-card-actions { display: flex; gap: 4px; margin-top: 8px; }
+  .btn-entry-action {
+    background: none; border: 1px solid var(--border); border-radius: 4px;
+    padding: 2px 8px; font-size: 10px; font-family: var(--sans); font-weight: 500;
+    color: var(--text-muted); cursor: pointer; transition: all 0.12s;
+  }
+  .btn-entry-action:hover { border-color: var(--text-muted); color: var(--text-primary); }
+  .btn-entry-action.del:hover { border-color: var(--danger); color: var(--danger); }
+
+  .timeline-select-hint { flex: 1; display: flex; align-items: center; justify-content: flex-start; padding: 20px 28px; }
+  .timeline-select-hint p { font-size: 11px; color: var(--border); font-family: var(--mono); }
+
+
+  .section-label-text.navy { color: #1E3A5F; }
+  .section-label-text.teal { color: #0E6655; }
+
+  .gaso-steps { display: flex; flex-direction: column; gap: 8px; }
+  .gaso-step {
+    background: var(--bg); border-radius: 6px; padding: 10px 13px;
+    border-left: 3px solid var(--border);
+  }
+  .gaso-step.green { border-left-color: var(--accent); background: var(--accent-light); }
+  .gaso-step.yellow { border-left-color: #D4A017; background: #FFFBF0; }
+  .gaso-step.red { border-left-color: var(--danger); background: var(--danger-light); }
+  .gaso-step-label {
+    font-size: 10px; font-weight: 700; font-family: var(--mono);
+    letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 3px;
+  }
+  .gaso-step.green .gaso-step-label { color: var(--accent); }
+  .gaso-step.yellow .gaso-step-label { color: #92660A; }
+  .gaso-step.red .gaso-step-label { color: var(--danger); }
+  .gaso-step-value { font-size: 12.5px; color: var(--text-primary); line-height: 1.5; font-family: var(--mono); }
+
   @keyframes shake {
     0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)}
     40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)}
@@ -611,6 +798,7 @@
     <div class="sidebar-tabs">
       <button class="sidebar-tab active" data-tab="condutas" onclick="switchTab('condutas')">Condutas</button>
       <button class="sidebar-tab" data-tab="escores" onclick="switchTab('escores')">Escores</button>
+      <button class="sidebar-tab" data-tab="plantao" onclick="switchTab('plantao')">Plantão</button>
     </div>
 
     <!-- Tab: Condutas -->
@@ -633,6 +821,17 @@
     <!-- Tab: Escores -->
     <div class="tab-content" id="tab-escores">
       <div class="score-list" id="score-list"></div>
+    </div>
+
+    <!-- Tab: Plantão -->
+    <div class="tab-content" id="tab-plantao">
+      <div class="plantao-header">
+        <div class="plantao-header-row">
+          <div class="plantao-title">PLANTÕES</div>
+          <button class="btn-new-shift" onclick="newShift()">+ NOVO</button>
+        </div>
+        <div class="shift-list" id="shift-list"></div>
+      </div>
     </div>
   </div>
 
@@ -701,6 +900,24 @@
           </div>
           <div class="section-body"><pre class="prescription-text" id="detail-body"></pre></div>
         </div>
+        <div class="section-block" id="sec-prontuario">
+          <div class="section-label">
+            <span class="section-label-text navy">Conduta no Prontuário</span>
+            <button class="btn-copy" id="copy-prontuario" onclick="copySection('prontuario')">
+              <svg viewBox="0 0 14 14"><rect x="4" y="4" width="8" height="9" rx="1"/><path d="M10 4V3a1 1 0 00-1-1H3a1 1 0 00-1 1v8a1 1 0 001 1h1"/></svg>Copiar
+            </button>
+          </div>
+          <div class="section-body"><pre class="prescription-text" id="detail-prontuario"></pre></div>
+        </div>
+        <div class="section-block" id="sec-orientacoes">
+          <div class="section-label">
+            <span class="section-label-text teal">Orientações de Alta</span>
+            <button class="btn-copy" id="copy-orientacoes" onclick="copySection('orientacoes')">
+              <svg viewBox="0 0 14 14"><rect x="4" y="4" width="8" height="9" rx="1"/><path d="M10 4V3a1 1 0 00-1-1H3a1 1 0 00-1 1v8a1 1 0 001 1h1"/></svg>Copiar
+            </button>
+          </div>
+          <div class="section-body"><pre class="prescription-text" id="detail-orientacoes"></pre></div>
+        </div>
         <div class="section-block" id="sec-alergia">
           <div class="section-label">
             <span class="section-label-text red">Alternativa por Alergia</span>
@@ -713,8 +930,27 @@
       </div>
     </div>
 
-    <!-- Score detail -->
-    <div class="detail-view" id="view-score">
+    <!-- Timeline (Plantão) -->
+    <div class="detail-view timeline-view" id="view-plantao">
+      <div class="timeline-header">
+        <div>
+          <div class="timeline-title" id="timeline-title">Plantão</div>
+          <div class="timeline-subtitle" id="timeline-subtitle"></div>
+        </div>
+        <button class="btn-add-entry" onclick="openEntryModal()">
+          <svg viewBox="0 0 14 14"><path d="M7 2v10M2 7h10"/></svg>
+          Novo paciente
+        </button>
+      </div>
+      <div class="timeline-body">
+        <div id="timeline-list" class="timeline-list"></div>
+      </div>
+    </div>
+
+    <!-- Timeline select hint -->
+    <div class="detail-view" id="view-plantao-hint">
+      <div class="timeline-select-hint"><p>Selecione um plantão ou crie um novo.</p></div>
+    </div>
       <div class="score-calc-header">
         <div class="score-calc-name" id="score-calc-name"></div>
         <div class="score-calc-subtitle" id="score-calc-subtitle"></div>
@@ -791,6 +1027,14 @@ EXAME FÍSICO:
         <textarea id="field-body" style="min-height:160px" placeholder="VIA ORAL&#10;&#10;1) AMOXICILINA 500MG ------------- 30 CPS&#10;   TOMAR 01 CÁPSULA DE 8/8H POR 10 DIAS"></textarea>
       </div>
       <div class="field">
+        <label>Conduta no Prontuário <span class="opt">(opcional)</span></label>
+        <textarea id="field-prontuario" style="min-height:110px" placeholder="AVALIO EM PRONTO ATENDIMENTO, SEM SINAIS DE DESIDRATAÇÃO GRAVE.&#10;PRESCREVO SINTOMÁTICOS.&#10;ORIENTO HIDRATAÇÃO ORAL RIGOROSA.&#10;LIBERO PARA CASA APÓS ORIENTAÇÕES."></textarea>
+      </div>
+      <div class="field">
+        <label>Orientações de Alta <span class="opt">(opcional)</span></label>
+        <textarea id="field-orientacoes" style="min-height:100px" placeholder="Hidratação frequente.&#10;Alimentação leve.&#10;Retornar se não tolerar líquidos ou febre persistente."></textarea>
+      </div>
+      <div class="field">
         <label>Alternativa por alergia <span class="opt">(opcional)</span></label>
         <textarea id="field-alergia" style="min-height:100px" placeholder="Se alérgico à penicilina:&#10;&#10;VIA ORAL&#10;&#10;1) AZITROMICINA 500MG ------------ 05 CPS&#10;   TOMAR 01 CÁPSULA AO DIA POR 5 DIAS"></textarea>
       </div>
@@ -798,6 +1042,51 @@ EXAME FÍSICO:
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
       <button class="btn-save" onclick="save()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Entry Modal -->
+<div class="modal-overlay" id="entry-overlay" onclick="entryOverlayClose(event)">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <div class="modal-title" id="entry-modal-title">Novo paciente</div>
+      <button class="modal-close" onclick="closeEntryModal()">
+        <svg viewBox="0 0 18 18"><path d="M2 2l14 14M16 2L2 16"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Leito / Identificador</label>
+        <input type="text" id="entry-leito" placeholder="Ex: LEITO 3 · JOÃO S." autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Queixa principal</label>
+        <input type="text" id="entry-queixa" placeholder="Ex: Dor abdominal há 6 horas" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Hipótese diagnóstica</label>
+        <input type="text" id="entry-hipotese" placeholder="Ex: Apendicite aguda" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Conduta</label>
+        <textarea id="entry-conduta" style="min-height:80px" placeholder="Ex: Cirurgia acionada, NPO, acesso venoso, SF 500mL EV"></textarea>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="entry-status" class="tag-select">
+          <option value="observacao">EM OBSERVAÇÃO</option>
+          <option value="aguardando">AGUARDANDO EXAME</option>
+          <option value="alta">ALTA</option>
+          <option value="internado">INTERNADO</option>
+          <option value="transferido">TRANSFERIDO</option>
+          <option value="obito">ÓBITO</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeEntryModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveEntry()">Salvar</button>
     </div>
   </div>
 </div>
@@ -1065,7 +1354,7 @@ const SCORES = [
   },
   {
     id: 'abcd2',
-    name: 'ABCD²',
+    name: 'ABCD2',
     subtitle: 'Risco de AVC nos 2 dias após AIT',
     sections: [
       {
@@ -1177,7 +1466,7 @@ const SCORES = [
         { id: 'dor_fid', label: 'Dor à palpação em FID', type: 'check', pts: '+2' },
         { id: 'descomp', label: 'Descompressão dolorosa (Blumberg)', type: 'check', pts: '+1' },
         { id: 'febre', label: 'Temperatura > 37,3°C', type: 'check', pts: '+1' },
-        { id: 'leucocitose', label: 'Leucocitose > 10.000/mm³', type: 'check', pts: '+2' },
+        { id: 'leucocitose', label: 'Leucocitose > 10.000/mm3', type: 'check', pts: '+2' },
       ]
     }],
     calc: v => (v.migracao?1:0)+(v.anorexia?1:0)+(v.nausea?1:0)+(v.dor_fid?2:0)+(v.descomp?1:0)+(v.febre?1:0)+(v.leucocitose?2:0),
@@ -1473,8 +1762,244 @@ const SCORES = [
     },
     noNumber: true
   }
+  ,
+  // ── CALCULADORAS ──────────────────────────────────────────
+  {
+    id: 'clearance_creat',
+    name: 'Clearance de Creatinina',
+    subtitle: 'Cockcroft-Gault — função renal',
+    category: 'calc',
+    sections: [
+      {
+        fields: [
+          { id: 'idade', label: 'Idade', type: 'number', unit: 'anos', min: 18, max: 120 },
+          { id: 'peso', label: 'Peso corporal', type: 'number', unit: 'kg', min: 1, max: 300 },
+          { id: 'creat', label: 'Creatinina sérica', type: 'number', unit: 'mg/dL', step: 0.01, min: 0.1, max: 20 },
+        ]
+      },
+      {
+        title: 'Sexo biológico',
+        fields: [
+          { id: 'sexo', type: 'radio', options: [
+            { value: 'M', label: 'Masculino', pts: '' },
+            { value: 'F', label: 'Feminino', pts: '' },
+          ]}
+        ]
+      }
+    ],
+    calc: (v) => {
+      if (!v.idade || !v.peso || !v.creat || !v.sexo) return null;
+      let clcr = (140 - parseFloat(v.idade)) * parseFloat(v.peso) / (72 * parseFloat(v.creat));
+      if (v.sexo === 'F') clcr *= 0.85;
+      return Math.round(clcr * 10) / 10;
+    },
+    interpret: (s) => {
+      if (s === null || s <= 0) return null;
+      if (s >= 90) return { label: `${s} mL/min — Normal (≥ 90)`, color: 'green', rec: 'Função renal preservada. Sem necessidade de ajuste de dose pela função renal.' };
+      if (s >= 60) return { label: `${s} mL/min — Lesão leve (60–89)`, color: 'green', rec: 'Atenção a medicamentos nefrotóxicos. Verificar bula para ajuste de dose.' };
+      if (s >= 30) return { label: `${s} mL/min — Lesão moderada (30–59)`, color: 'yellow', rec: 'Ajuste de dose necessário para vários fármacos. Metformina contraindicada < 30. Evitar nefrotóxicos.' };
+      if (s >= 15) return { label: `${s} mL/min — Lesão grave (15–29)`, color: 'red', rec: 'Ajuste significativo de doses. Evitar maioria dos AINES. Encaminhar para nefrologia.' };
+      return { label: `${s} mL/min — Falência renal (< 15)`, color: 'red', rec: 'Diálise possivelmente necessária. Contraindicar maioria dos fármacos de excreção renal.' };
+    }
+  },
+  {
+    id: 'imc',
+    name: 'IMC',
+    subtitle: 'Índice de Massa Corporal — classificação OMS',
+    category: 'calc',
+    sections: [{
+      fields: [
+        { id: 'peso', label: 'Peso', type: 'number', unit: 'kg', min: 1, max: 500 },
+        { id: 'altura', label: 'Altura', type: 'number', unit: 'cm', min: 50, max: 250 },
+      ]
+    }],
+    calc: (v) => {
+      if (!v.peso || !v.altura) return null;
+      const h = parseFloat(v.altura) / 100;
+      return Math.round((parseFloat(v.peso) / (h * h)) * 10) / 10;
+    },
+    interpret: (s) => {
+      if (s === null || s <= 0) return null;
+      if (s < 18.5) return { label: `IMC ${s} — Abaixo do peso`, color: 'yellow', rec: 'IMC < 18,5. Avaliar causas de baixo peso. Considerar suporte nutricional.' };
+      if (s < 25)   return { label: `IMC ${s} — Peso normal`, color: 'green', rec: 'IMC 18,5–24,9. Peso adequado para a altura.' };
+      if (s < 30)   return { label: `IMC ${s} — Sobrepeso`, color: 'yellow', rec: 'IMC 25–29,9. Risco cardiovascular aumentado. Orientar dieta e atividade física.' };
+      if (s < 35)   return { label: `IMC ${s} — Obesidade grau I`, color: 'yellow', rec: 'IMC 30–34,9. Risco aumentado de DM2, HAS, dislipidemia.' };
+      if (s < 40)   return { label: `IMC ${s} — Obesidade grau II`, color: 'red', rec: 'IMC 35–39,9. Risco elevado. Considerar encaminhamento para endocrinologia/bariátrica.' };
+      return { label: `IMC ${s} — Obesidade grau III (mórbida)`, color: 'red', rec: 'IMC ≥ 40. Risco muito elevado. Encaminhar para avaliação multidisciplinar.' };
+    }
+  },
+  {
+    id: 'na_glicose',
+    name: 'Correção do Sódio na Hiperglicemia',
+    subtitle: 'Sódio corrigido pela glicemia — fórmula de Hillier',
+    category: 'calc',
+    sections: [{
+      fields: [
+        { id: 'na', label: 'Sódio medido', type: 'number', unit: 'mEq/L', min: 100, max: 180 },
+        { id: 'glicose', label: 'Glicemia', type: 'number', unit: 'mg/dL', min: 100, max: 2000 },
+      ]
+    }],
+    calc: (v) => {
+      if (!v.na || !v.glicose) return null;
+      const glicose = parseFloat(v.glicose);
+      const na = parseFloat(v.na);
+      if (glicose <= 100) return na;
+      // Hillier 1999: 2.4 mEq/L para cada 100 mg/dL acima de 100
+      const corr = na + 2.4 * ((glicose - 100) / 100);
+      return Math.round(corr * 10) / 10;
+    },
+    interpret: (s, v) => {
+      if (s === null) return null;
+      const na = parseFloat(v.na);
+      const glicose = parseFloat(v.glicose);
+      let desc = '';
+      if (s < na) desc = 'Sem correção necessária (glicemia ≤ 100).';
+      else desc = `Sódio corrigido: ${s} mEq/L (Na medido: ${na} + ${Math.round((s-na)*10)/10} de correção).`;
+
+      if (s < 135) return { label: `${s} mEq/L — Hiponatremia`, color: 'yellow', rec: `${desc} Hiponatremia verdadeira após correção. Investigar causa.` };
+      if (s <= 145) return { label: `${s} mEq/L — Normal`, color: 'green', rec: `${desc} Sódio normal após correção. A hiponatremia era pseudohiponatremia dilucional pela hiperglicemia.` };
+      return { label: `${s} mEq/L — Hipernatremia`, color: 'red', rec: `${desc} Hipernatremia verdadeira. Avaliar hidratação e causa.` };
+    }
+  },
+  // ── REFERÊNCIAS ───────────────────────────────────────────
+  {
+    id: 'antidotos',
+    name: 'Antídotos — Intoxicações',
+    subtitle: 'Referência rápida por agente tóxico',
+    category: 'ref',
+    ref: 'Goldfrank\'s Toxicologic Emergencies, 11ª ed. + CIATOX',
+    items: [
+      { agente: 'Paracetamol', antidoto: 'N-Acetilcisteína (NAC)', dose: 'IV: 150 mg/kg em 60 min → 50 mg/kg em 4h → 100 mg/kg em 16h\nVO: 140 mg/kg ataque + 70 mg/kg a cada 4h por 17 doses', obs: 'Máxima eficácia até 8h após ingestão. Iniciar mesmo após 24h se hepatotoxicidade.' },
+      { agente: 'Benzodiazepínicos', antidoto: 'Flumazenil', dose: '0,3 mg IV lento (30 seg); repetir 0,1 mg a cada 60 seg até resposta\nMáximo: 3 mg total', obs: 'Pode precipitar convulsões em dependentes ou usuários crônicos. Meia-vida curta — pode necessitar repetição.' },
+      { agente: 'Opioides', antidoto: 'Naloxona', dose: '0,4–2 mg IV/IM/IN; repetir a cada 2–3 min até resposta\nInfusão: 2/3 da dose de resposta por hora', obs: 'Meia-vida mais curta que opioides de longa ação — atenção ao rebote. Via intranasal eficaz se sem acesso venoso.' },
+      { agente: 'Organofosforados / Carbamatos', antidoto: 'Atropina + Pralidoxima (2-PAM)', dose: 'Atropina: 1–4 mg IV em bolus; repetir a cada 5–10 min até atropinização\nPralidoxima: 1–2 g IV em 15–30 min; seguido de 200–500 mg/h', obs: 'Endpoint da atropina: secreções secas, não FC. Pralidoxima eficaz apenas nas primeiras 24–48h.' },
+      { agente: 'Anticolinérgicos', antidoto: 'Fisostigmina', dose: '1–2 mg IV lento (> 5 min); pode repetir após 20 min\nMáximo: 4 mg', obs: 'Apenas para toxicidade grave com agitação intratável, arritmia ou convulsão. Ter atropina disponível.' },
+      { agente: 'Beta-bloqueadores', antidoto: 'Glucagon + Atropina', dose: 'Glucagon: 3–5 mg IV em 2 min; infusão 2–5 mg/h\nAtropina: 0,5–1 mg IV para bradicardia', obs: 'Considerar insulina-euglicemia (1 U/kg IV + glicose) em refratários. Marca-passo se sem resposta.' },
+      { agente: 'Bloqueadores de canal de cálcio', antidoto: 'Gluconato de cálcio + Glucagon + Insulina-euglicemia', dose: 'Ca gluconato 10%: 20 mL IV em 5 min (repetir até 3x)\nInsulina regular: 1 U/kg IV + glicose 50% para manter glicemia', obs: 'Insulina-euglicemia é o tratamento mais eficaz. Considerar emulsão lipídica 20% em refratários.' },
+      { agente: 'Digoxina / Digitálicos', antidoto: 'Anticorpos anti-Fab (Digifab)', dose: 'Dose (frascos) = nível sérico (ng/mL) x peso (kg) / 100\nSe nível indisponível: 10–20 frascos (intoxicação aguda)', obs: 'Raramente disponível no Brasil. Contatar CIATOX: 0800 722 6001.' },
+      { agente: 'Cianeto', antidoto: 'Hidroxocobalamina (Cyanokit)', dose: '5 g IV em 15 min; pode repetir 1–2x\nAlternativa: Nitrito de sódio 3% 10 mL IV + Tiossulfato de sódio 25% 50 mL IV', obs: 'Hidroxocobalamina é o antídoto de escolha — sem risco de metemoglobinemia. Contatar CIATOX para obtenção.' },
+      { agente: 'Monóxido de carbono (CO)', antidoto: 'O2 100%', dose: 'Máscara sem reinalação: O2 100% por 4–6h\nCâmara hiperbárica: avaliar indicação', obs: 'Câmara hiperbárica se COHb > 25%, gestante, cardiopatia, coma ou sintomas neurológicos persistentes.' },
+      { agente: 'Antidepressivos tricíclicos', antidoto: 'Bicarbonato de sódio (NaHCO3)', dose: '1–2 mEq/kg IV em bolus; manter pH sérico 7,45–7,55', obs: 'Indicado para QRS > 100 ms, hipotensão ou arritmia. Evitar flumazenil. Monitorar K+.' },
+      { agente: 'Isoniazida (INH)', antidoto: 'Piridoxina (Vitamina B6)', dose: 'Dose em mg = dose ingerida de INH em mg (máx 5 g IV)\nSe dose desconhecida: 70 mg/kg IV (máx 5 g)', obs: 'Para convulsões refratárias a benzodiazepínicos. Administrar IV em 5 min em convulsão ativa.' },
+      { agente: 'Metanol / Etileno glicol', antidoto: 'Fomepizol (preferencial) ou Etanol', dose: 'Fomepizol: 15 mg/kg IV em 30 min; depois 10 mg/kg a cada 12h por 48h\nEtanol (se indisponível): manter alcoolemia 100–150 mg/dL', obs: 'Pode necessitar diálise se acidose grave. Contatar CIATOX para fomepizol.' },
+      { agente: 'Warfarina / Cumarínicos', antidoto: 'Vitamina K1 + Plasma fresco / CCP', dose: 'Vit K1: 5–10 mg IV lento (< 1 mg/min) ou VO; repetir conforme INR\nPlasma: 15 mL/kg IV; CCP: 25–50 UI/kg', obs: 'Plasma ou CCP para reversão urgente (INR > 4 + sangramento ativo). Para raticidas cumarínicos: Vit K pode ser necessária por semanas.' },
+      { agente: 'Heparina', antidoto: 'Sulfato de protamina', dose: '1 mg por 100 UI de heparina administrada na última hora\nMáximo: 50 mg IV lento (> 10 min)', obs: 'Risco de hipotensão e bradicardia. Ter epinefrina disponível. Para HBPM: eficácia parcial (máx 60%).' },
+      { agente: 'Insulina / Hipoglicemiantes orais', antidoto: 'Glicose 50% + Glucagon', dose: 'G50%: 50 mL IV; manter glicemia 100–200 mg/dL com SG10%\nGlucagon: 1 mg IM/SC se sem acesso venoso', obs: 'Octreotide (50 mcg SC 8/8h) para sulfonilureias — reduz secreção de insulina endógena.' },
+      { agente: 'Metemoglobinizantes (nitritos, dapsona, anilina)', antidoto: 'Azul de metileno', dose: '1–2 mg/kg IV em 5 min; pode repetir após 1h\nMáximo: 7 mg/kg total', obs: 'Ineficaz em deficiência de G6PD — nesses casos, considerar transfusão ou câmara hiperbárica.' },
+      { agente: 'Ferro (intoxicação grave)', antidoto: 'Deferoxamina', dose: '15 mg/kg/h IV (máx 6 g/dia)\nContinuar até urina "rosé" clareada e clínica melhorada', obs: 'Indicar se Fe sérico > 500 mcg/dL, sintomas graves ou acidose. Cuidado com hipotensão na infusão rápida.' },
+    ]
+  }
+  ,
+  {
+    id: 'gasometria',
+    name: 'Gasometria Arterial',
+    subtitle: 'Interpretação passo a passo — distúrbios ácido-base',
+    category: 'calc',
+    isGaso: true,
+    sections: [
+      {
+        fields: [
+          { id: 'ph',   label: 'pH',       type: 'number', step: 0.001, min: 6.8,  max: 7.8,  unit: '' },
+          { id: 'pco2', label: 'PaCO2',    type: 'number', step: 0.1,   min: 5,    max: 120,  unit: 'mmHg' },
+          { id: 'hco3', label: 'HCO3−',   type: 'number', step: 0.1,   min: 1,    max: 60,   unit: 'mEq/L' },
+        ]
+      },
+      {
+        title: 'Ânion Gap — opcional (Na+, Cl−)',
+        fields: [
+          { id: 'na', label: 'Sódio (Na+)',  type: 'number', min: 100, max: 180, unit: 'mEq/L' },
+          { id: 'cl', label: 'Cloro (Cl−)', type: 'number', min: 50,  max: 150, unit: 'mEq/L' },
+        ]
+      },
+      {
+        title: 'Oxigenação — opcional',
+        fields: [
+          { id: 'pao2', label: 'PaO2',  type: 'number', min: 20,   max: 600, unit: 'mmHg' },
+          { id: 'fio2', label: 'FiO2',  type: 'number', step: 0.01, min: 0.21, max: 1.0, unit: '(0,21 = ar ambiente)' },
+        ]
+      }
+    ],
+    calc: (v) => v,
+    interpret: (v) => {
+      if (!v.ph || !v.pco2 || !v.hco3) return null;
+      const ph = parseFloat(v.ph), pco2 = parseFloat(v.pco2), hco3 = parseFloat(v.hco3);
+      const na = v.na ? parseFloat(v.na) : null;
+      const cl = v.cl ? parseFloat(v.cl) : null;
+      const pao2 = v.pao2 ? parseFloat(v.pao2) : null;
+      const fio2 = v.fio2 ? parseFloat(v.fio2) : null;
+      const steps = [];
+
+      // 1. pH
+      let phColor;
+      if (ph < 7.35) { phColor = 'red'; steps.push({ label: '1. pH', value: `ACIDEMIA — pH ${ph} (< 7,35)`, color: 'red' }); }
+      else if (ph > 7.45) { phColor = 'yellow'; steps.push({ label: '1. pH', value: `ALCALEMIA — pH ${ph} (> 7,45)`, color: 'yellow' }); }
+      else { phColor = 'green'; steps.push({ label: '1. pH', value: `NORMAL — pH ${ph} (7,35–7,45)`, color: 'green' }); }
+
+      // 2. Distúrbio primário
+      const disorders = [];
+      if (ph < 7.35) {
+        if (pco2 > 45) disorders.push('ACIDOSE RESPIRATÓRIA');
+        if (hco3 < 22) disorders.push('ACIDOSE METABÓLICA');
+      } else if (ph > 7.45) {
+        if (pco2 < 35) disorders.push('ALCALOSE RESPIRATÓRIA');
+        if (hco3 > 26) disorders.push('ALCALOSE METABÓLICA');
+      } else {
+        if (pco2 > 45 && hco3 > 26) disorders.push('pH normal — acidose resp. crônica compensada / alcalose metabólica compensada');
+        else if (pco2 < 35 && hco3 < 22) disorders.push('pH normal — alcalose resp. crônica compensada / acidose metabólica compensada');
+        else disorders.push('Normal — sem distúrbio primário aparente');
+      }
+      steps.push({ label: '2. Distúrbio primário', value: disorders.join(' + '), color: disorders[0].includes('Normal') ? 'green' : 'red' });
+
+      // 3. Compensação
+      if (disorders.some(d => d.includes('ACIDOSE METABÓLICA'))) {
+        const expMin = Math.round(1.5 * hco3 + 6);
+        const expMax = Math.round(1.5 * hco3 + 10);
+        const ok = pco2 >= expMin && pco2 <= expMax;
+        steps.push({ label: '3. Compensação (Fórmula de Winter)', value: `PaCO2 esperado: ${expMin}–${expMax} mmHg | Encontrado: ${pco2} mmHg → ${ok ? 'ADEQUADA' : pco2 < expMin ? 'PaCO2 baixo → Alcalose respiratória concomitante' : 'PaCO2 alto → Acidose respiratória concomitante'}`, color: ok ? 'green' : 'red' });
+      } else if (disorders.some(d => d.includes('ALCALOSE METABÓLICA'))) {
+        const expMin = Math.round(0.7 * hco3 + 19);
+        const expMax = Math.round(0.7 * hco3 + 23);
+        const ok = pco2 >= expMin && pco2 <= expMax;
+        steps.push({ label: '3. Compensação', value: `PaCO2 esperado: ${expMin}–${expMax} mmHg | Encontrado: ${pco2} mmHg → ${ok ? 'ADEQUADA' : 'INADEQUADA — distúrbio misto'}`, color: ok ? 'green' : 'red' });
+      } else if (disorders.some(d => d.includes('ACIDOSE RESPIRATÓRIA'))) {
+        const dPco2 = pco2 - 40;
+        const expAcute   = Math.round(24 + 0.1 * dPco2);
+        const expChronic = Math.round(24 + 0.35 * dPco2);
+        steps.push({ label: '3. Compensação', value: `HCO3 esperado — Aguda: ~${expAcute} | Crônica: ~${expChronic} mEq/L | Encontrado: ${hco3} mEq/L → ${hco3 <= expAcute + 2 ? 'Provável AGUDA' : hco3 >= expChronic - 2 ? 'Provável CRÔNICA' : 'Mista / parcialmente compensada'}`, color: 'green' });
+      } else if (disorders.some(d => d.includes('ALCALOSE RESPIRATÓRIA'))) {
+        const dPco2 = 40 - pco2;
+        const expAcute   = Math.round(24 - 0.2 * dPco2);
+        const expChronic = Math.round(24 - 0.5 * dPco2);
+        steps.push({ label: '3. Compensação', value: `HCO3 esperado — Aguda: ~${expAcute} | Crônica: ~${expChronic} mEq/L | Encontrado: ${hco3} mEq/L`, color: 'green' });
+      }
+
+      // 4. Ânion Gap
+      if (na && cl) {
+        const ag = na - (cl + hco3);
+        const agHigh = ag > 12;
+        steps.push({ label: '4. Ânion Gap', value: `AG = ${Math.round(ag)} mEq/L ${agHigh ? '— ELEVADO (> 12) → causas: cetoacidose, uremia, lactacidose, intoxicações' : '— Normal (≤ 12)'}`, color: agHigh ? 'red' : 'green' });
+        if (agHigh && disorders.some(d => d.includes('ACIDOSE METABÓLICA'))) {
+          const dd = (ag - 12) / (24 - hco3);
+          let ddText;
+          if (dd < 0.4) ddText = 'Acidose não-AG isolada';
+          else if (dd < 1) ddText = 'Misto: AG elevado + não-AG';
+          else if (dd <= 2) ddText = 'Acidose metabólica com AG pura';
+          else ddText = 'AG elevado + alcalose metabólica concomitante';
+          steps.push({ label: '5. Delta-Delta', value: `Ratio = ${dd.toFixed(2)} → ${ddText}`, color: dd >= 1 && dd <= 2 ? 'green' : 'yellow' });
+        }
+      }
+
+      // Oxigenação
+      if (pao2 && fio2) {
+        const pf = Math.round(pao2 / fio2);
+        const pfText = pf >= 300 ? 'Normal' : pf >= 200 ? 'Lesão Pulmonar Aguda (LPA)' : 'SARA (SDRA)';
+        steps.push({ label: '6. PaO2/FiO2', value: `${pf} → ${pfText}`, color: pf >= 300 ? 'green' : pf >= 200 ? 'yellow' : 'red' });
+      }
+
+      return { steps, isGaso: true };
+    }
+  }
 ];
-const ANAMNESE_TEMPLATES = [
   {
     name: 'Faringoamigdalite / Odinofagia',
     text: `QP: DOR DE GARGANTA HÁ ___ DIAS.
@@ -1721,6 +2246,8 @@ async function load() {
       if (!d.exames)   d.exames   = '';
       if (!d.alergia)  d.alergia  = '';
       if (!d.tag)      d.tag      = '';
+      if (!d.prontuario)   d.prontuario   = '';
+      if (!d.orientacoes)  d.orientacoes  = '';
     });
   } catch {
     try {
@@ -1794,8 +2321,13 @@ function switchTab(tab) {
   document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   document.getElementById('tab-condutas').classList.toggle('active', tab === 'condutas');
   document.getElementById('tab-escores').classList.toggle('active', tab === 'escores');
+  document.getElementById('tab-plantao').classList.toggle('active', tab === 'plantao');
   document.getElementById('btn-new').style.display = tab === 'condutas' ? '' : 'none';
   if (tab === 'escores') showView('empty');
+  else if (tab === 'plantao') {
+    if (selectedShiftId) showView('plantao');
+    else showView('plantao-hint');
+  }
   else if (selectedId) showView('conduta');
   else showView('empty');
 }
@@ -1853,12 +2385,27 @@ function render() {
 // ─── RENDER SCORE LIST ───────────────────────────────────────
 function renderScoreList() {
   const el = document.getElementById('score-list');
-  const sorted = [...SCORES].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
-  el.innerHTML = sorted.map(s => `
-    <div class="score-list-item ${s.id === selectedScoreId ? 'active' : ''}" id="sli-${s.id}" onclick="selectScore('${s.id}')">
+  const catOrder = { score: 0, calc: 1, ref: 2 };
+  const catLabels = { score: 'ESCORES CLÍNICOS', calc: 'CALCULADORAS', ref: 'REFERÊNCIAS' };
+  const all = [...SCORES].sort((a, b) => {
+    const ca = catOrder[a.category || 'score'];
+    const cb = catOrder[b.category || 'score'];
+    if (ca !== cb) return ca - cb;
+    return a.name.localeCompare(b.name, 'pt-BR');
+  });
+  let html = '', currentCat = null;
+  all.forEach(s => {
+    const cat = s.category || 'score';
+    if (cat !== currentCat) {
+      html += `<div class="score-category-header">${catLabels[cat]}</div>`;
+      currentCat = cat;
+    }
+    html += `<div class="score-list-item ${s.id === selectedScoreId ? 'active' : ''}" id="sli-${s.id}" onclick="selectScore('${s.id}')">
       <div class="score-list-name">${s.name}</div>
       <div class="score-list-sub">${s.subtitle}</div>
-    </div>`).join('');
+    </div>`;
+  });
+  el.innerHTML = html;
 }
 
 // ─── A-Z ─────────────────────────────────────────────────────
@@ -1880,10 +2427,12 @@ function jumpToLetter(l) {
 
 // ─── VIEW MANAGEMENT ─────────────────────────────────────────
 function showView(which) {
-  ['view-empty','view-conduta','view-score'].forEach(id => {
+  ['view-empty','view-conduta','view-score','view-plantao','view-plantao-hint'].forEach(id => {
     const el = document.getElementById(id);
-    el.style.display = '';
-    el.classList.toggle('visible', id === 'view-' + which);
+    if (el) {
+      el.style.display = '';
+      el.classList.toggle('visible', id === 'view-' + which);
+    }
   });
 }
 
@@ -1902,10 +2451,14 @@ function selectItem(id) {
   document.getElementById('detail-anamnese').textContent = item.anamnese || '';
   document.getElementById('detail-exames').textContent = item.exames || '';
   document.getElementById('detail-body').textContent = item.body || '';
+  document.getElementById('detail-prontuario').textContent = item.prontuario || '';
+  document.getElementById('detail-orientacoes').textContent = item.orientacoes || '';
   document.getElementById('detail-alergia').textContent = item.alergia || '';
 
   document.getElementById('sec-anamnese').style.display = item.anamnese?.trim() ? '' : 'none';
   document.getElementById('sec-exames').style.display = item.exames?.trim() ? '' : 'none';
+  document.getElementById('sec-prontuario').style.display = item.prontuario?.trim() ? '' : 'none';
+  document.getElementById('sec-orientacoes').style.display = item.orientacoes?.trim() ? '' : 'none';
   document.getElementById('sec-alergia').style.display = item.alergia?.trim() ? '' : 'none';
 
   showView('conduta');
@@ -1927,29 +2480,47 @@ function selectScore(id) {
   document.getElementById('score-calc-name').textContent = score.name;
   document.getElementById('score-calc-subtitle').textContent = score.subtitle;
 
-  // Render fields
-  const container = document.getElementById('score-fields-container');
-  container.innerHTML = score.sections.map(section => `
-    <div class="score-fields-block">
-      ${section.title ? `<div class="score-section-title">${section.title}</div>` : ''}
-      <div class="score-fields">
-        ${section.fields.map(field => renderScoreField(field)).join('')}
-      </div>
-    </div>`).join('');
+  // Show/hide reset button and result
+  document.getElementById('score-result').style.display = score.category === 'ref' ? 'none' : '';
+  document.querySelector('.btn-reset').style.display = score.category === 'ref' ? 'none' : '';
 
-  // Attach listeners
-  container.querySelectorAll('input, select').forEach(el => {
-    el.addEventListener('change', () => recalculate(score));
-  });
+  if (score.category === 'ref') {
+    renderRef(score);
+  } else {
+    // Render fields (scores + calculators)
+    const container = document.getElementById('score-fields-container');
+    container.innerHTML = score.sections.map(section => `
+      <div class="score-fields-block">
+        ${section.title ? `<div class="score-section-title">${section.title}</div>` : ''}
+        <div class="score-fields">
+          ${section.fields.map(field => renderScoreField(field)).join('')}
+        </div>
+      </div>`).join('');
 
-  // Reset result
-  document.getElementById('score-result').className = 'score-result';
-  document.getElementById('score-result').innerHTML = '<div class="score-result-pending">Preencha os campos acima para calcular.</div>';
+    container.querySelectorAll('input').forEach(el => {
+      el.addEventListener('change', () => recalculate(score));
+      el.addEventListener('input', () => recalculate(score));
+    });
+
+    document.getElementById('score-result').className = 'score-result';
+    document.getElementById('score-result').innerHTML = '<div class="score-result-pending">Preencha os campos acima para calcular.</div>';
+  }
 
   showView('score');
 }
 
 function renderScoreField(field) {
+  if (field.type === 'number') {
+    return `<div class="calc-field-wrap">
+      <label class="calc-field-label" for="sf-${field.id}">${field.label}</label>
+      <div class="calc-input-wrap">
+        <input type="number" class="calc-input" name="${field.id}" id="sf-${field.id}"
+          placeholder="—" min="${field.min||0}" max="${field.max||9999}"
+          step="${field.step||1}" autocomplete="off">
+        ${field.unit ? `<span class="calc-unit">${field.unit}</span>` : ''}
+      </div>
+    </div>`;
+  }
   if (field.type === 'check') {
     const pts = field.pts ? `<span class="pts ${field.pts.startsWith('+') ? 'pos' : field.pts.startsWith('−') || field.pts.startsWith('-') ? 'neg' : ''}">${field.pts}</span>` : '';
     return `<label class="score-field" onclick="">
@@ -1974,18 +2545,25 @@ function recalculate(score) {
   document.querySelectorAll('#score-fields-container input').forEach(el => {
     if (el.type === 'checkbox') v[el.name] = el.checked;
     else if (el.type === 'radio' && el.checked) v[el.name] = el.value;
+    else if (el.type === 'number') v[el.name] = el.value ? parseFloat(el.value) : null;
   });
   scoreValues = v;
 
   const s = score.calc(v);
   const result = score.interpret(s, v);
-  if (!result) return;
 
   const el = document.getElementById('score-result');
+
+  if (!result) {
+    el.className = 'score-result';
+    el.innerHTML = '<div class="score-result-pending">Preencha todos os campos para calcular.</div>';
+    return;
+  }
+
   el.className = `score-result ${result.color}`;
   el.innerHTML = `
     <div class="score-result-top">
-      ${!score.noNumber ? `<div class="score-number">${s}</div>` : ''}
+      ${(!score.noNumber && s !== null) ? `<div class="score-number">${s}</div>` : ''}
       <div class="score-result-label">${result.label}</div>
     </div>
     <div class="score-result-rec">${result.rec}</div>`;
@@ -2006,8 +2584,22 @@ function resetScore() {
 function copySection(which) {
   const item = data.find(d => d.id === selectedId);
   if (!item) return;
-  const map = { anamnese: item.anamnese, exames: item.exames, prescricao: item.body, alergia: item.alergia };
-  const btnMap = { anamnese: 'copy-anamnese', exames: 'copy-exames', prescricao: 'copy-prescricao', alergia: 'copy-alergia' };
+  const map = {
+    anamnese: item.anamnese,
+    exames: item.exames,
+    prescricao: item.body,
+    prontuario: item.prontuario,
+    orientacoes: item.orientacoes,
+    alergia: item.alergia
+  };
+  const btnMap = {
+    anamnese: 'copy-anamnese',
+    exames: 'copy-exames',
+    prescricao: 'copy-prescricao',
+    prontuario: 'copy-prontuario',
+    orientacoes: 'copy-orientacoes',
+    alergia: 'copy-alergia'
+  };
   navigator.clipboard.writeText(map[which] || '').then(() => {
     const btn = document.getElementById(btnMap[which]);
     btn.classList.add('copied');
@@ -2059,6 +2651,8 @@ function save() {
   const anamnese = document.getElementById('field-anamnese').value.trim();
   const exames = document.getElementById('field-exames').value.trim();
   const body = document.getElementById('field-body').value.trim();
+  const prontuario = document.getElementById('field-prontuario').value.trim();
+  const orientacoes = document.getElementById('field-orientacoes').value.trim();
   const alergia = document.getElementById('field-alergia').value.trim();
   const tag = document.getElementById('field-tag').value;
   if (!name) { shake('field-name'); return; }
@@ -2067,10 +2661,10 @@ function save() {
   let savedId;
   if (editingId) {
     const item = data.find(d => d.id === editingId);
-    if (item) Object.assign(item, { name, anamnese, exames, body, alergia, tag });
+    if (item) Object.assign(item, { name, anamnese, exames, body, prontuario, orientacoes, alergia, tag });
     savedId = editingId;
   } else {
-    const newItem = { id: uid(), name, anamnese, exames, body, alergia, tag };
+    const newItem = { id: uid(), name, anamnese, exames, body, prontuario, orientacoes, alergia, tag };
     data.push(newItem);
     savedId = newItem.id;
   }
@@ -2130,6 +2724,198 @@ function importData() {
     reader.readAsText(file);
   };
   input.click();
+}
+
+// ─── PLANTÃO ─────────────────────────────────────────────────
+const PLANTAO_KEY = 'condutas_plantao_v1';
+let plantaoData = { shifts: [] };
+let selectedShiftId = null;
+let editingEntryId = null;
+
+const STATUS_LABELS = {
+  observacao: 'EM OBSERVAÇÃO',
+  aguardando: 'AGUARDANDO EXAME',
+  alta: 'ALTA',
+  internado: 'INTERNADO',
+  transferido: 'TRANSFERIDO',
+  obito: 'ÓBITO',
+};
+
+const STATUS_COLORS = {
+  observacao: '#F59E0B',
+  aguardando: '#3B82F6',
+  alta: '#2A6B5A',
+  internado: '#6C5CE7',
+  transferido: '#AAB7B8',
+  obito: '#1A1916',
+};
+
+const STATUS_DOT = {
+  observacao: '#F59E0B',
+  aguardando: '#3B82F6',
+  alta: '#2A6B5A',
+  internado: '#6C5CE7',
+  transferido: '#AAB7B8',
+  obito: '#333',
+};
+
+function loadPlantao() {
+  try {
+    const raw = localStorage.getItem(PLANTAO_KEY);
+    plantaoData = raw ? JSON.parse(raw) : { shifts: [] };
+  } catch { plantaoData = { shifts: [] }; }
+}
+
+function savePlantao() {
+  localStorage.setItem(PLANTAO_KEY, JSON.stringify(plantaoData));
+}
+
+function newShift() {
+  const now = new Date();
+  const id = 'shift_' + Date.now();
+  const shift = {
+    id,
+    date: now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' }),
+    startTime: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+    entries: []
+  };
+  plantaoData.shifts.unshift(shift);
+  savePlantao();
+  renderShiftList();
+  selectShift(id);
+}
+
+function renderShiftList() {
+  const el = document.getElementById('shift-list');
+  if (plantaoData.shifts.length === 0) {
+    el.innerHTML = '<div style="font-size:11px;color:var(--text-muted);padding:8px 6px;font-family:var(--mono)">Nenhum plantão ainda.</div>';
+    return;
+  }
+  el.innerHTML = plantaoData.shifts.map(s => `
+    <div class="shift-item ${s.id === selectedShiftId ? 'active' : ''}" onclick="selectShift('${s.id}')">
+      <div class="shift-item-left">
+        <div class="shift-date">${s.date}</div>
+        <div class="shift-time">Início: ${s.startTime}</div>
+      </div>
+      <span class="shift-count">${s.entries.length}</span>
+    </div>`).join('');
+}
+
+function selectShift(id) {
+  selectedShiftId = id;
+  renderShiftList();
+  renderTimeline();
+  showView('plantao');
+}
+
+function renderTimeline() {
+  const shift = plantaoData.shifts.find(s => s.id === selectedShiftId);
+  if (!shift) return;
+
+  document.getElementById('timeline-title').textContent = shift.date;
+  document.getElementById('timeline-subtitle').textContent = `Início ${shift.startTime} · ${shift.entries.length} paciente${shift.entries.length !== 1 ? 's' : ''}`;
+
+  const list = document.getElementById('timeline-list');
+  if (shift.entries.length === 0) {
+    list.innerHTML = `<div class="timeline-empty"><p>Nenhum paciente registrado.<br>Clique em "Novo paciente" para começar.</p></div>`;
+    return;
+  }
+
+  list.innerHTML = shift.entries.map(entry => {
+    const dotColor = STATUS_DOT[entry.status] || '#AAB7B8';
+    const badgeClass = `status-${entry.status}`;
+    return `<div class="timeline-entry">
+      <div class="timeline-time">${entry.time}</div>
+      <div class="timeline-dot" style="background:${dotColor}"></div>
+      <div class="timeline-card" onclick="editEntry('${entry.id}')">
+        <div class="timeline-card-top">
+          <div class="timeline-leito">${escHtml(entry.leito)}</div>
+          <span class="timeline-status-badge ${badgeClass}">${STATUS_LABELS[entry.status]||entry.status}</span>
+        </div>
+        ${entry.queixa ? `<div class="timeline-field"><strong>QP:</strong> ${escHtml(entry.queixa)}</div>` : ''}
+        ${entry.hipotese ? `<div class="timeline-field"><strong>HD:</strong> ${escHtml(entry.hipotese)}</div>` : ''}
+        ${entry.conduta ? `<div class="timeline-field"><strong>Conduta:</strong> ${escHtml(entry.conduta)}</div>` : ''}
+        <div class="timeline-card-actions">
+          <button class="btn-entry-action" onclick="event.stopPropagation();editEntry('${entry.id}')">Editar</button>
+          <button class="btn-entry-action del" onclick="event.stopPropagation();deleteEntry('${entry.id}')">Excluir</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openEntryModal(entryId) {
+  editingEntryId = entryId || null;
+  document.getElementById('entry-modal-title').textContent = entryId ? 'Editar paciente' : 'Novo paciente';
+  if (entryId) {
+    const shift = plantaoData.shifts.find(s => s.id === selectedShiftId);
+    const entry = shift?.entries.find(e => e.id === entryId);
+    if (entry) {
+      document.getElementById('entry-leito').value = entry.leito || '';
+      document.getElementById('entry-queixa').value = entry.queixa || '';
+      document.getElementById('entry-hipotese').value = entry.hipotese || '';
+      document.getElementById('entry-conduta').value = entry.conduta || '';
+      document.getElementById('entry-status').value = entry.status || 'observacao';
+    }
+  } else {
+    ['entry-leito','entry-queixa','entry-hipotese','entry-conduta'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('entry-status').value = 'observacao';
+  }
+  document.getElementById('entry-overlay').classList.add('active');
+  setTimeout(() => document.getElementById('entry-leito').focus(), 80);
+}
+
+function closeEntryModal() {
+  document.getElementById('entry-overlay').classList.remove('active');
+  editingEntryId = null;
+}
+
+function entryOverlayClose(e) {
+  if (e.target === document.getElementById('entry-overlay')) closeEntryModal();
+}
+
+function saveEntry() {
+  const leito = document.getElementById('entry-leito').value.trim().toUpperCase();
+  if (!leito) { shake('entry-leito'); return; }
+
+  const now = new Date();
+  const time = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  const entry = {
+    id: editingEntryId || ('e_' + Date.now()),
+    time: editingEntryId ? (plantaoData.shifts.find(s=>s.id===selectedShiftId)?.entries.find(e=>e.id===editingEntryId)?.time || time) : time,
+    leito,
+    queixa: document.getElementById('entry-queixa').value.trim(),
+    hipotese: document.getElementById('entry-hipotese').value.trim(),
+    conduta: document.getElementById('entry-conduta').value.trim(),
+    status: document.getElementById('entry-status').value,
+  };
+
+  const shift = plantaoData.shifts.find(s => s.id === selectedShiftId);
+  if (!shift) return;
+
+  if (editingEntryId) {
+    const idx = shift.entries.findIndex(e => e.id === editingEntryId);
+    if (idx !== -1) shift.entries[idx] = entry;
+  } else {
+    shift.entries.push(entry);
+  }
+
+  savePlantao();
+  renderTimeline();
+  renderShiftList();
+  closeEntryModal();
+}
+
+function editEntry(id) { openEntryModal(id); }
+
+function deleteEntry(id) {
+  if (!confirm('Excluir este registro?')) return;
+  const shift = plantaoData.shifts.find(s => s.id === selectedShiftId);
+  if (!shift) return;
+  shift.entries = shift.entries.filter(e => e.id !== id);
+  savePlantao();
+  renderTimeline();
+  renderShiftList();
 }
 
 // ─── TEMPLATE PICKER ─────────────────────────────────────────
@@ -2265,6 +3051,44 @@ window.addEventListener('beforeinstallprompt', e => {
   deferredInstallPrompt = e;
 });
 
+// ─── REFERENCE TABLE ─────────────────────────────────────────
+function renderRef(score) {
+  const container = document.getElementById('score-fields-container');
+  container.innerHTML = `
+    <div class="score-fields-block">
+      <div class="score-section-title">REFERÊNCIA</div>
+      <div style="padding:8px 14px 10px">
+        <input type="text" class="ref-search" id="ref-search"
+          placeholder="Buscar agente ou antídoto..."
+          oninput="filterRef('${score.id}', this.value)">
+      </div>
+    </div>
+    <div id="ref-table-container">${buildRefHTML(score.items, '')}</div>
+    <div class="ref-ref">Fonte: ${score.ref}</div>`;
+}
+
+function buildRefHTML(items, filter) {
+  const q = filter.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const filtered = items.filter(item =>
+    !q || norm(item.agente).includes(q) || norm(item.antidoto).includes(q) || norm(item.obs||'').includes(q)
+  );
+  if (filtered.length === 0) return '<div style="padding:16px;text-align:center;font-size:12px;color:var(--text-muted)">Nenhum resultado.</div>';
+  return '<div class="score-fields-block">' + filtered.map(item => `
+    <div class="ref-card">
+      <div class="ref-agente">${item.agente}</div>
+      <div class="ref-antidoto">${item.antidoto}</div>
+      <div class="ref-dose">${item.dose.replace(/\n/g, '<br>')}</div>
+      ${item.obs ? `<div class="ref-obs">${item.obs}</div>` : ''}
+    </div>`).join('') + '</div>';
+}
+
+function filterRef(scoreId, value) {
+  const score = SCORES.find(s => s.id === scoreId);
+  if (score) document.getElementById('ref-table-container').innerHTML = buildRefHTML(score.items, value);
+}
+window.filterRef = filterRef;
+
 // ─── TAG BAR DRAG SCROLL ─────────────────────────────────────
 (function() {
   let isDown = false, startX, scrollLeft;
@@ -2304,7 +3128,8 @@ function highlight(text, term) {
 // ─── KEYBOARD ────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    if (document.getElementById('notes-overlay').classList.contains('active')) toggleNotes();
+    if (document.getElementById('entry-overlay').classList.contains('active')) closeEntryModal();
+    else if (document.getElementById('notes-overlay').classList.contains('active')) toggleNotes();
     else if (document.getElementById('template-overlay').classList.contains('active')) closeTemplatePicker();
     else if (document.getElementById('confirm-overlay').classList.contains('active')) closeConfirm();
     else if (document.getElementById('modal-overlay').classList.contains('active')) closeModal();
@@ -2348,16 +3173,22 @@ window.templateOverlayClose = templateOverlayClose;
 window.applyTemplate = applyTemplate;
 window.setTagFilter = setTagFilter;
 
+window.newShift = newShift;
+window.selectShift = selectShift;
+window.openEntryModal = openEntryModal;
+window.closeEntryModal = closeEntryModal;
+window.entryOverlayClose = entryOverlayClose;
+window.saveEntry = saveEntry;
+window.editEntry = editEntry;
+window.deleteEntry = deleteEntry;
+
 // ─── INIT ────────────────────────────────────────────────────
+loadPlantao();
+renderShiftList();
 load().then(() => {
   render();
   renderScoreList();
-  if (data.length > 0) {
-    selectItem(sorted(data)[0].id);
-  } else {
-    document.getElementById('view-empty').style.display = '';
-    document.getElementById('view-empty').classList.add('visible');
-  }
+  if (data.length > 0) selectItem(sorted(data)[0].id);
 });
 </script>
 </body>
