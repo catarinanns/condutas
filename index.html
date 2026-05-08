@@ -2250,6 +2250,8 @@ async function load() {
       if (!d.prontuario)   d.prontuario   = '';
       if (!d.orientacoes)  d.orientacoes  = '';
     });
+    const added = seedNewCondutas();
+    if (added > 0) await persist();
   } catch {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -2259,9 +2261,20 @@ async function load() {
         if (!d.exames)   d.exames   = '';
         if (!d.alergia)  d.alergia  = '';
         if (!d.tag)      d.tag      = '';
+        if (!d.prontuario)   d.prontuario   = '';
+        if (!d.orientacoes)  d.orientacoes  = '';
       });
+      const added = seedNewCondutas();
+      if (added > 0) persist();
     } catch { data = sampleData(); }
   }
+}
+
+function seedNewCondutas() {
+  const existing = new Set(data.map(d => d.name.toUpperCase()));
+  const seeds = sampleData().filter(d => !existing.has(d.name.toUpperCase()));
+  seeds.forEach(d => data.push(d));
+  return seeds.length;
 }
 
 async function persist() {
