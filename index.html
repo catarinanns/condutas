@@ -742,6 +742,90 @@
   .gaso-step.red .gaso-step-label { color: var(--danger); }
   .gaso-step-value { font-size: 12.5px; color: var(--text-primary); line-height: 1.5; font-family: var(--mono); }
 
+
+  /* ─── SMART CLIPBOARD STACK ─── */
+  .clip-indicator {
+    position: fixed; bottom: 68px; right: 20px;
+    background: var(--text-primary); color: white;
+    border-radius: var(--radius); padding: 7px 13px;
+    font-size: 10px; font-family: var(--mono); font-weight: 600;
+    display: none; align-items: center; gap: 8px;
+    cursor: pointer; z-index: 400; box-shadow: var(--shadow-md);
+    letter-spacing: 0.05em; transition: background 0.15s;
+    user-select: none; max-width: 320px;
+  }
+  .clip-indicator:hover { background: #2a2925; }
+  .clip-ind-name { color: #888; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
+  .clip-ind-status { color: white; }
+  .clip-ind-next { color: #81C784; font-size: 9px; white-space: nowrap; }
+  .clip-ind-done { color: #81C784; }
+
+  /* ─── RADIAL MENU ─── */
+  .radial-menu {
+    position: fixed; pointer-events: none; z-index: 600;
+    display: none; transform: translate(-50%, -50%);
+  }
+  .radial-menu.active { display: block; pointer-events: auto; }
+
+  .radial-center {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-primary); opacity: 0.5;
+    position: absolute; transform: translate(-50%, -50%);
+  }
+  .radial-option {
+    position: absolute; transform: translate(-50%, -50%);
+    background: rgba(26,25,22,0.93); color: white;
+    font-size: 10px; font-family: var(--mono); font-weight: 700;
+    letter-spacing: 0.07em; padding: 4px 11px; border-radius: 4px;
+    white-space: nowrap; transition: background 0.08s, color 0.08s;
+    user-select: none; pointer-events: none;
+  }
+  .radial-option.highlight { background: var(--accent); }
+  .radial-option[data-dir="up"]    { top: -38px; left: 0; }
+  .radial-option[data-dir="down"]  { top:  38px; left: 0; }
+  .radial-option[data-dir="left"]  { top: 0; left: -72px; }
+  .radial-option[data-dir="right"] { top: 0; left:  72px; }
+  .radial-option.dim { opacity: 0.35; }
+
+  /* suppress context menu on list items */
+  .list-item { -webkit-user-select: none; user-select: none; }
+
+
+  /* ─── INTENT BADGE ─── */
+  .intent-badge {
+    position: fixed; bottom: 68px; left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: var(--surface);
+    border: 1.5px solid var(--accent); color: var(--accent);
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; padding: 5px 16px; border-radius: 4px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.12s, transform 0.12s;
+    z-index: 410;
+  }
+  .intent-badge.visible {
+    opacity: 1; transform: translateX(-50%) translateY(0);
+  }
+
+  /* ─── CLIP INDICATOR ─── */
+  .clip-indicator {
+    position: fixed; bottom: 68px; right: 20px;
+    background: var(--text-primary); color: white;
+    border-radius: 6px; padding: 7px 13px;
+    font-size: 10px; font-family: var(--mono); font-weight: 600;
+    display: none; align-items: center; gap: 7px;
+    cursor: pointer; z-index: 410; box-shadow: var(--shadow-md);
+    letter-spacing: 0.05em; transition: background 0.12s;
+    user-select: none; white-space: nowrap;
+  }
+  .clip-indicator:hover { background: #2a2925; }
+  .ci-name { color: #999; font-size: 9px; max-width: 110px; overflow: hidden; text-overflow: ellipsis; }
+  .ci-sep  { color: #555; }
+  .ci-cur  { color: white; }
+  .ci-arrow { color: #555; }
+  .ci-nxt  { color: #81C784; }
+  .ci-check { color: #81C784; }
+
   @keyframes shake {
     0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)}
     40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)}
@@ -2500,7 +2584,7 @@ function render() {
       ].join('');
       const tagC = item.tag && TAG_COLORS[item.tag];
       const tagBadge = item.tag ? `<span class="tag-badge" style="background:${tagC?.bg||'#eee'};border:1px solid ${tagC?.border||'#ccc'};color:${tagC?.text||'#666'}">${item.tag}</span>` : '';
-      html += `<div class="list-item ${item.id === selectedId ? 'active' : ''}" id="li-${safeId}" onclick="selectItem('${safeId}')">
+      html += `<div class="list-item ${item.id === selectedId ? 'active' : ''}" id="li-${safeId}" onclick="selectItem('${safeId}')" ondblclick="onDoubleClickCard('${safeId}')">
         <span class="item-idx">${String(++idx).padStart(2,'0')}</span>
         <div style="flex:1;min-width:0">
           <div class="item-name">${highlight(escHtml(item.name), searchTerm)}</div>
@@ -3276,16 +3360,167 @@ function highlight(text, term) {
 
 // ─── KEYBOARD ────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
+  const tag = document.activeElement?.tagName;
+  const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+
   if (e.key === 'Escape') {
     if (document.getElementById('entry-overlay').classList.contains('active')) closeEntryModal();
     else if (document.getElementById('notes-overlay').classList.contains('active')) toggleNotes();
     else if (document.getElementById('template-overlay').classList.contains('active')) closeTemplatePicker();
     else if (document.getElementById('confirm-overlay').classList.contains('active')) closeConfirm();
     else if (document.getElementById('modal-overlay').classList.contains('active')) closeModal();
+    else { currentIntent = null; hideIntentBadge(); clearClipQueue(); }
   }
   if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); document.getElementById('search').focus(); document.getElementById('search').select(); }
   if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); if (activeTab === 'condutas') openModal(); }
+
+  // Intent keys — only when NOT typing
+  if (!typing && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    if (['a','m','r','p','e'].includes(e.key.toLowerCase())) {
+      // only if no modal open
+      const anyModal = ['modal-overlay','entry-overlay','notes-overlay','template-overlay','confirm-overlay']
+        .some(id => document.getElementById(id)?.classList.contains('active'));
+      if (!anyModal) {
+        setIntent(e.key.toLowerCase());
+        e.preventDefault();
+      }
+    }
+    // Space advances clip queue
+    if (e.key === ' ' && clipQueue.length > 0 && clipQueueIndex < clipQueue.length - 1) {
+      e.preventDefault();
+      advanceClipQueue();
+    }
+  }
 });
+
+// ─── KEYBOARD INTENT ACTIONS ─────────────────────────────────
+const FIELD_LABELS = {
+  body:        'PRESCRIÇÃO',
+  orientacoes: 'ORIENTAÇÕES',
+  prontuario:  'PRONTUÁRIO',
+  alergia:     'ALTERNATIVA',
+  anamnese:    'ANAMNESE',
+  exames:      'EXAMES',
+};
+
+const INTENTS = {
+  a: { label: 'ALTA',       fields: ['orientacoes', 'prontuario', 'body'] },
+  m: { label: 'MEDICAÇÃO',  fields: ['body', 'alergia'] },
+  r: { label: 'REAVALIAÇÃO',fields: ['anamnese', 'exames', 'body'] },
+  p: { label: 'PRONTUÁRIO', fields: ['prontuario', 'body'] },
+  e: { label: 'EXAMES',     fields: ['exames', 'body'] },
+};
+
+let currentIntent    = null;
+let intentTimer      = null;
+let intentBadgeEl    = null;
+let clipQueue        = [];
+let clipQueueIndex   = 0;
+let clipQueueName    = '';
+let clipQueueTimer   = null;
+let clipIndicatorEl  = null;
+
+function setIntent(key) {
+  const intent = INTENTS[key];
+  if (!intent) return;
+  currentIntent = key;
+  clearTimeout(intentTimer);
+  showIntentBadge(intent.label);
+  intentTimer = setTimeout(() => { currentIntent = null; hideIntentBadge(); }, 6000);
+}
+
+function showIntentBadge(label) {
+  if (!intentBadgeEl) {
+    intentBadgeEl = document.createElement('div');
+    intentBadgeEl.className = 'intent-badge';
+    document.body.appendChild(intentBadgeEl);
+  }
+  intentBadgeEl.textContent = 'STACK: ' + label;
+  intentBadgeEl.classList.add('visible');
+}
+
+function hideIntentBadge() {
+  intentBadgeEl?.classList.remove('visible');
+}
+
+function buildStack(item, fields) {
+  return fields
+    .filter(f => item[f]?.trim())
+    .map(f => ({ label: FIELD_LABELS[f], text: item[f] }));
+}
+
+function onDoubleClickCard(id) {
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+
+  let stack;
+  if (currentIntent && INTENTS[currentIntent]) {
+    stack = buildStack(item, INTENTS[currentIntent].fields);
+    clearTimeout(intentTimer);
+    currentIntent = null;
+    hideIntentBadge();
+  } else {
+    stack = buildStack(item, ['body', 'orientacoes']);
+  }
+
+  if (!stack.length) { showToast('SEM CONTEÚDO DISPONÍVEL'); return; }
+  startClipQueue(stack, item.name);
+}
+
+function startClipQueue(stack, name) {
+  clipQueue      = stack;
+  clipQueueName  = name;
+  clipQueueIndex = 0;
+  clearTimeout(clipQueueTimer);
+  clipQueueTimer = setTimeout(clearClipQueue, 5 * 60 * 1000);
+  copyFromQueue(0);
+}
+
+function copyFromQueue(idx) {
+  if (idx >= clipQueue.length) return;
+  const item = clipQueue[idx];
+  navigator.clipboard.writeText(item.text).then(() => {
+    clipQueueIndex = idx;
+    updateClipIndicator();
+    const rest = clipQueue.slice(idx + 1).map(i => i.label).join(', ');
+    showToast(item.label + ' COPIADA' + (rest ? ' · +' + rest : ''));
+  });
+}
+
+function advanceClipQueue() {
+  const next = clipQueueIndex + 1;
+  if (next < clipQueue.length) copyFromQueue(next);
+  else clearClipQueue();
+}
+
+function clearClipQueue() {
+  clipQueue = []; clipQueueIndex = 0;
+  clearTimeout(clipQueueTimer);
+  if (clipIndicatorEl) clipIndicatorEl.style.display = 'none';
+}
+
+function updateClipIndicator() {
+  if (!clipIndicatorEl) {
+    clipIndicatorEl = document.createElement('div');
+    clipIndicatorEl.className = 'clip-indicator';
+    clipIndicatorEl.title = 'Clique para próximo item';
+    clipIndicatorEl.onclick = advanceClipQueue;
+    document.body.appendChild(clipIndicatorEl);
+  }
+  const cur = clipQueue[clipQueueIndex];
+  const nxt = clipQueue[clipQueueIndex + 1];
+  const name = clipQueueName.length > 20 ? clipQueueName.slice(0, 20) + '…' : clipQueueName;
+  clipIndicatorEl.style.display = 'flex';
+  clipIndicatorEl.innerHTML =
+    `<span class="ci-name">${name}</span>` +
+    `<span class="ci-sep">·</span>` +
+    `<span class="ci-cur">${cur.label}</span>` +
+    (nxt
+      ? `<span class="ci-arrow">→</span><span class="ci-nxt">${nxt.label}</span>`
+      : `<span class="ci-check">✓</span>`);
+}
+
+window.onDoubleClickCard = onDoubleClickCard;
 
 // ─── EXPOSE TO WINDOW (needed for type=module onclick handlers) ───
 window.openModal = openModal;
